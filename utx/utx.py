@@ -13,7 +13,7 @@ CASE_DATA_FLAG = "__case_data__"
 CASE_ID_FLAG = "__case_id__"
 CASE_INFO_FLAG = "__case_info__"
 
-__all__ = ["data", "setting", "smoke_test", "full_test"]
+__all__ = ["data", "setting", "smoke_test", "full_test", "stop_patch"]
 
 
 def data(*values):
@@ -27,7 +27,6 @@ def data(*values):
 
 
 class setting:
-
     # 是否开启冒烟测试
     smoke_test = False
 
@@ -155,4 +154,9 @@ class _TestCase(unittest.TestCase, metaclass=Meta):
         return doc
 
 
+raw_unittest_testcase = unittest.TestCase
 unittest.TestCase = _TestCase
+
+
+def stop_patch():
+    unittest.TestCase = raw_unittest_testcase
