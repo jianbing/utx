@@ -7,7 +7,7 @@ from utx.BSTestRunner import BSTestRunner
 
 
 class TestRunner:
-    def run_test(self, path="testcase"):
+    def run_test(self, path="testcase", title='接口自动化测试报告'):
         if not os.path.exists("report"):
             os.mkdir("report")
 
@@ -15,8 +15,8 @@ class TestRunner:
 
         suite = unittest.TestLoader().discover(path)
         with open(report_file, "wb") as f:
-            runner = BSTestRunner(stream=f, title='接口自动化测试报告')
+            runner = BSTestRunner(stream=f, title=title)
             runner.run(suite)
 
-        print("接口自动化测试完成，请查看报告")
+        print("测试完成，请查看报告")
         os.system("start report")
