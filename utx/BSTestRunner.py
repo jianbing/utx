@@ -835,7 +835,6 @@ class BSTestRunner(Template_mixin):
         return report
 
     def _generate_report_test(self, rows, cid, tid, n, t, o, e):
-        # e.g. 'pt1.1', 'ft1.1', etc
         has_output = bool(o or e)
         tid = (n == 0 and 'p' or 'f') + 't%s.%s' % (cid + 1, tid + 1)
         name = t.id().split('.')[-1]
@@ -855,7 +854,6 @@ class BSTestRunner(Template_mixin):
             ue = e
 
         script = self.REPORT_TEST_OUTPUT_TMPL % dict(
-            # id=tid,
             output=saxutils.escape(uo + ue),
         )
 

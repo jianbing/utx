@@ -19,7 +19,7 @@ __all__ = ["data", "setting", "smoke_test", "full_test", "stop_patch"]
 def data(*values):
     def wrap(func):
         if hasattr(func, CASE_DATA_FLAG):
-            log.error(f"{func.__name__}的测试数据只能初始化一次")
+            log.error("{}的测试数据只能初始化一次".format(func.__name__))
         setattr(func, CASE_DATA_FLAG, values)
         return func
 
@@ -44,17 +44,18 @@ def full_test(func):
     return func
 
 
-def _error_handler(func):
+def _handler(func):
     @functools.wraps(func)
-    def __error_handler(*args, **kwargs):
+    def __handler(*args, **kwargs):
         time.sleep(setting.execute_interval)
-
-        log.info(
-            f"Start to test {getattr(func, CASE_INFO_FLAG)} ({int(getattr(func, CASE_ID_FLAG))}/{Tool.total_case_num})")
+        msg = "Start to test {} ({}/{})".format(getattr(func, CASE_INFO_FLAG),
+                                                getattr(func, CASE_ID_FLAG),
+                                                Tool.total_case_num)
+        log.info(msg)
         result = func(*args, **kwargs)
         return result
 
-    return __error_handler
+    return __handler
 
 
 class Tool:
@@ -63,39 +64,54 @@ class Tool:
     @classmethod
     def general_case_id(cls):
         cls.total_case_num += 1
-        case_id = "{:05d}".format(cls.total_case_num)
-        return case_id
+        return cls.total_case_num
 
     @staticmethod
-    def make_test_from_case_data(funcs: dict, raw_func, raw_func_name: str):
+    def make_case_from_case_data(raw_func_name, raw_func):
+        result = dict()
         for index, test_data in enumerate(getattr(raw_func, CASE_DATA_FLAG), 1):
             case_id = Tool.general_case_id()
             setattr(raw_func, CASE_ID_FLAG, case_id)
+            func_name = raw_func_name.replace("test_", "test_{:05d}_".format(case_id))
 
             if isinstance(test_data, list):
-                func_name = raw_func_name.replace("test_", f"test_{case_id}_") + \
-                            "_{:05d}_{}".format(index, "_".join([str(_) for _ in test_data]))
-                funcs[func_name] = _error_handler(_feed_data(*test_data)(raw_func))
+
+                func_name += "_{:05d}_{}".format(index, "_".join([str(_) for _ in test_data]))
+                result[func_name] = _handler(_feed_data(*test_data)(raw_func))
 
             elif isinstance(test_data, dict):
-                func_name = raw_func_name.replace("test_", f"test_{case_id}_") + \
-                            "_{:05d}_{}".format(index, "_".join([str(_) for _ in test_data.values()]))
-                funcs[func_name] = _error_handler(_feed_data(**test_data)(raw_func))
+                func_name += "_{:05d}_{}".format(index, "_".join([str(_) for _ in test_data.values()]))
+                result[func_name] = _handler(_feed_data(**test_data)(raw_func))
 
             elif isinstance(test_data, (int, str, bool, float)):
-                func_name = raw_func_name.replace("test_", f"test_{case_id}_") + "_{:05d}_{}".format(index, test_data)
-                funcs[func_name] = _error_handler(_feed_data(test_data)(raw_func))
+                func_name += "_{:05d}_{}".format(index, test_data)
+                result[func_name] = _handler(_feed_data(test_data)(raw_func))
 
             else:
-                raise Exception(f"无法解析{test_data}")
+                raise Exception("无法解析{}".format(test_data))
+        return result
 
     @staticmethod
-    def make_simple_test(funcs: dict, raw_func, raw_func_name: str):
+    def make_simple_case(raw_func_name, raw_func):
+        result = dict()
         case_id = Tool.general_case_id()
         setattr(raw_func, CASE_ID_FLAG, case_id)
 
-        func_name = raw_func_name.replace("test_", "test_{}_".format(case_id))
-        funcs[func_name] = _error_handler(raw_func)
+        func_name = raw_func_name.replace("test_", "test_{:05d}_".format(case_id))
+        result[func_name] = _handler(raw_func)
+        return result
+
+    @staticmethod
+    def filter_test_case(funcs_dict):
+        funcs = dict()
+        cases = dict()
+        for i in funcs_dict:
+            if i.startswith("test_"):
+                cases[i] = funcs_dict[i]
+            else:
+                funcs[i] = funcs_dict[i]
+
+        return funcs, sorted(cases.items(), key=lambda x: x[-1].__code__.co_firstlineno)
 
 
 def _feed_data(*args, **kwargs):
@@ -112,33 +128,27 @@ def _feed_data(*args, **kwargs):
 class Meta(type):
     @staticmethod
     def __new__(S, *more):
-        funcs = dict()
-        for raw_func_name in more[-1]:
-            if raw_func_name.startswith("test_"):
-                raw_func = more[-1][raw_func_name]
+        funcs, cases = Tool.filter_test_case(more[-1])
+        for raw_case_name, raw_case in cases:
+            if not hasattr(raw_case, CASE_LEVEL_FLAG):
+                setattr(raw_case, CASE_LEVEL_FLAG, 1)
 
-                if not hasattr(raw_func, CASE_LEVEL_FLAG):
-                    setattr(raw_func, CASE_LEVEL_FLAG, 1)
+            # 注入用例信息
+            case_info = "{}.{}".format(raw_case.__module__, raw_case.__name__)
+            setattr(raw_case, CASE_INFO_FLAG, case_info)
 
-                # 注入用例信息
-                case_info = "{}.{}".format(raw_func.__module__, raw_func.__name__)
-                setattr(raw_func, CASE_INFO_FLAG, case_info)
+            # 检查用例描述
+            if not raw_case.__doc__:
+                log.warn("{}没有用例描述".format(case_info))
 
-                # 用例描述检查
-                if not raw_func.__doc__:
-                    log.warn("{}没有用例描述".format(case_info))
+            if setting.smoke_test and getattr(raw_case, CASE_LEVEL_FLAG) == 2:
+                continue
 
-                if setting.smoke_test and getattr(raw_func, CASE_LEVEL_FLAG) == 2:
-                    continue
-
-                # 注入测试数据
-                if hasattr(raw_func, CASE_DATA_FLAG):
-                    Tool.make_test_from_case_data(funcs, raw_func, raw_func_name)
-                else:
-                    Tool.make_simple_test(funcs, raw_func, raw_func_name)
-
+            # 注入测试数据
+            if hasattr(raw_case, CASE_DATA_FLAG):
+                funcs.update(Tool.make_case_from_case_data(raw_case_name, raw_case))
             else:
-                funcs[raw_func_name] = more[-1][raw_func_name]
+                funcs.update(Tool.make_simple_case(raw_case_name, raw_case))
 
         return super(Meta, S).__new__(S, *(more[0], more[1], funcs))
 
