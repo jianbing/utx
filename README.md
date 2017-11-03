@@ -6,30 +6,27 @@
 
 - 支持用例排序，只需要导入utx库，用例的执行顺序就会和编写顺序一致
 
-- 支持用例分级，目前提供@utx.smoke_test和@utx.full_test，可以方便标识冒烟级别的测试用例
+- 支持用例自定义标签，可以运行指定标签的测试用例
 
 ```python
 class TestLegion(unittest.TestCase):
 
-    @utx.smoke_test
+    @tag(Tag.SMOKE)
     def test_create_legion(self):
         pass
 
-    @utx.full_test
-    def test_bless(self):
-        pass    
 ```
 
 - 支持数据驱动
 ```python
 class TestLegion(unittest.TestCase):
 
-    @utx.data(["gold", 100], ["diamond", 500])
+    @data(["gold", 100], ["diamond", 500])
     def test_bless(self, bless_type, award):
         print(bless_type)
         print(award)
         
-    @utx.data(10001, 10002, 10003)
+    @data(10001, 10002, 10003)
     def test_receive_bless_box(self, box_id):
         """ 领取祈福宝箱
 

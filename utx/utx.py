@@ -7,13 +7,14 @@ import unittest
 import functools
 import time
 from . import log
+from .case_tag import Tag
 
-CASE_LEVEL_FLAG = "__case_level__"
+CASE_TAG_FLAG = "__case_level__"
 CASE_DATA_FLAG = "__case_data__"
 CASE_ID_FLAG = "__case_id__"
 CASE_INFO_FLAG = "__case_info__"
 
-__all__ = ["data", "setting", "smoke_test", "full_test", "stop_patch"]
+__all__ = ["data", "setting", "stop_patch", "Tag", "tag"]
 
 
 def data(*values):
@@ -27,21 +28,24 @@ def data(*values):
 
 
 class setting:
-    # 是否开启冒烟测试
-    smoke_test = False
+    # 只运行的用例类型
+    run_case = {Tag.SMOKE}
 
     # 每个用例的执行间隔，单位是秒
     execute_interval = 0.1
 
 
-def smoke_test(func):
-    setattr(func, CASE_LEVEL_FLAG, 1)
-    return func
+def tag(*tag_type):
+    def wrap(func):
+        if not hasattr(func, CASE_TAG_FLAG):
+            tags = {Tag.FULL}
+            tags.update(tag_type)
+            setattr(func, CASE_TAG_FLAG, tags)
+        else:
+            getattr(func, CASE_TAG_FLAG).update(tag_type)
+        return func
 
-
-def full_test(func):
-    setattr(func, CASE_LEVEL_FLAG, 2)
-    return func
+    return wrap
 
 
 def _handler(func):
@@ -110,7 +114,6 @@ class Tool:
                 cases[i] = funcs_dict[i]
             else:
                 funcs[i] = funcs_dict[i]
-
         return funcs, sorted(cases.items(), key=lambda x: x[-1].__code__.co_firstlineno)
 
 
@@ -130,8 +133,8 @@ class Meta(type):
     def __new__(S, *more):
         funcs, cases = Tool.filter_test_case(more[-1])
         for raw_case_name, raw_case in cases:
-            if not hasattr(raw_case, CASE_LEVEL_FLAG):
-                setattr(raw_case, CASE_LEVEL_FLAG, 1)
+            if not hasattr(raw_case, CASE_TAG_FLAG):
+                setattr(raw_case, CASE_TAG_FLAG, {Tag.SMOKE, Tag.FULL})  # 没有指定tag的用例，默认有SMOKE和FULL标记
 
             # 注入用例信息
             case_info = "{}.{}".format(raw_case.__module__, raw_case.__name__)
@@ -141,7 +144,8 @@ class Meta(type):
             if not raw_case.__doc__:
                 log.warn("{}没有用例描述".format(case_info))
 
-            if setting.smoke_test and getattr(raw_case, CASE_LEVEL_FLAG) == 2:
+            # 过滤不执行的用例
+            if not getattr(raw_case, CASE_TAG_FLAG) & set(setting.run_case):
                 continue
 
             # 注入测试数据
