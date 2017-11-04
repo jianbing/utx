@@ -1,12 +1,22 @@
-# utx
+from utx.setting import setting# utx
 
-> 支持Python3.3以上版本，请留意~~
+> 支持Python3.5及以上版本，请留意~~
 
 对Python unittest的功能进行了一些扩展
 
 - 支持用例排序，只需要导入utx库，用例的执行顺序就会和编写顺序一致
 
-- 支持用例自定义标签，可以运行指定标签的测试用例
+- 支持用例自定义标签，在case_tag.py添加自定义标签
+
+```python
+@unique
+class Tag(Enum):
+    SMOKE = 1  # 冒烟测试标记，可以重命名，但是不要删除
+    FULL = 1000  # 完整测试标记，可以重命名，但是不要删除
+
+    # 以下开始为扩展标签，自行调整
+    SP = 2
+```
 
 ```python
 class TestLegion(unittest.TestCase):
@@ -14,7 +24,20 @@ class TestLegion(unittest.TestCase):
     @tag(Tag.SMOKE)
     def test_create_legion(self):
         pass
+```
 
+- 运行指定标签的测试用例
+
+```python
+from utx import *
+
+if __name__ == '__main__':
+    setting.run_case = {Tag.SMOKE}  # 只运行SMOKE冒烟用例
+    # setting.run_case = {Tag.FULL}  # 运行全部测试用例
+    # setting.run_case = {Tag.SMOKE, Tag.SP}   # 只运行标记为SMOKE和SP的用例
+
+    runner = TestRunner()
+    runner.run_test(r"testcase")
 ```
 
 - 支持数据驱动
@@ -35,12 +58,12 @@ class TestLegion(unittest.TestCase):
         print(box_id)
 ```
 
-- 用例描述检测
+- 检测用例是否编写了用例描述
 ```python
 2017-11-03 12:00:19,334 WARNING legion.test_legion.test_bless没有用例描述
 ```
 
-- 测试进度展示
+- 执行测试时，显示测试进度
 ```python
 2017-11-03 12:00:19,336 INFO 开始进行测试
 2017-11-03 12:00:19,436 INFO Start to test legion.test_legion.test_create_legion (1/5)

@@ -8,5 +8,7 @@ if __name__ == '__main__':
     # setting.run_case = {Tag.FULL}  # 运行全部测试用例
     # setting.run_case = {Tag.SMOKE, Tag.SP}   # 只运行标记为SMOKE和SP的用例
 
+    # setting.check_case_doc = False  # 关闭检测用例描述
+
     runner = TestRunner()
     runner.run_test(r"testcase")

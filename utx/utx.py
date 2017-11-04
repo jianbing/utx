@@ -3,9 +3,10 @@
 """
 Created by jianbing on 2017-10-30
 """
-import unittest
 import functools
 import time
+import unittest
+from utx.setting import setting
 from . import log
 from .case_tag import Tag
 
@@ -14,7 +15,7 @@ CASE_DATA_FLAG = "__case_data__"
 CASE_ID_FLAG = "__case_id__"
 CASE_INFO_FLAG = "__case_info__"
 
-__all__ = ["data", "setting", "stop_patch", "Tag", "tag"]
+__all__ = ["data", "stop_patch", "Tag", "tag", "setting"]
 
 
 def data(*values):
@@ -25,14 +26,6 @@ def data(*values):
         return func
 
     return wrap
-
-
-class setting:
-    # 只运行的用例类型
-    run_case = {Tag.SMOKE}
-
-    # 每个用例的执行间隔，单位是秒
-    execute_interval = 0.1
 
 
 def tag(*tag_type):
@@ -141,7 +134,7 @@ class Meta(type):
             setattr(raw_case, CASE_INFO_FLAG, case_info)
 
             # 检查用例描述
-            if not raw_case.__doc__:
+            if setting.check_case_doc and not raw_case.__doc__:
                 log.warn("{}没有用例描述".format(case_info))
 
             # 过滤不执行的用例
