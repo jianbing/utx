@@ -72,7 +72,7 @@ class TestLegion(unittest.TestCase):
 2017-11-03 12:00:19,837 INFO Start to test legion.test_legion.test_quit_legion (5/5)
 ```
 
-- 集成BSTestRunner自动生成测试报告
+- 集成 [ztest](https://github.com/zhangfei19841004/ztest) 和 [BSTestRunner](https://github.com/easonhan007/HTMLTestRunner) 自动生成两份测试报告，感谢两位作者的测试报告模版~
 
 - 无缝接入unittest项目，导入utx包即可开始使用扩展功能，无需修改之前的代码
 
