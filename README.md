@@ -1,4 +1,3 @@
-from utx.setting import setting# utx
 
 > 支持Python3.5及以上版本，请留意~~
 
