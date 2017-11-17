@@ -19,6 +19,7 @@ class TestLegion(unittest.TestCase):
         print(bless_type)
         print(award)
 
+    @skip("跳过的原因")
     @data(10001, 10002, 10003)
     def test_receive_bless_box(self, box_id):
         """ 领取祈福宝箱
@@ -33,3 +34,5 @@ class TestLegion(unittest.TestCase):
 
         :return:
         """
+        print("吧啦啦啦啦啦啦")
+        assert 1 == 2

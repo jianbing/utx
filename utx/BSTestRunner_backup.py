@@ -71,12 +71,15 @@ class OutputRedirector(object):
         self.fp.flush()
 
 
-class Template_mixin:
+# stdout_redirector = OutputRedirector(sys.stdout)
+# stderr_redirector = OutputRedirector(sys.stderr)
+
+
+class Template_mixin(object):
     STATUS = {
-        0: 'Pass',
-        1: 'Fail',
-        2: 'Error',
-        3: 'Skip',
+        0: 'pass',
+        1: 'fail',
+        2: 'error',
     }
 
     DEFAULT_DESCRIPTION = ''
@@ -107,32 +110,22 @@ class Template_mixin:
 <script language="javascript" type="text/javascript"><!--
 output_list = Array();
 
-/* level - 0:Summary; 1:Failed; 2:Skip; 3:All */
+/* level - 0:Summary; 1:Failed; 2:All */
 function showCase(level) {
     trs = document.getElementsByTagName("tr");
     for (var i = 0; i < trs.length; i++) {
         tr = trs[i];
         id = tr.id;
-
-
-        if (id.substr(0, 2) === 'ft') {
-            if (level === 1 || level === 3) {
-                tr.className = '';
-            }
-            else {
+        if (id.substr(0,2) == 'ft') {
+            if (level < 1) {
                 tr.className = 'hiddenRow';
             }
-        }
-        if (id.substr(0, 2) === 'pt') {
-            if (level === 3) {
+            else {
                 tr.className = '';
             }
-            else {
-                tr.className = 'hiddenRow';
-            }
         }
-        if (id.substr(0, 2) === 'st') {
-            if (level === 2 || level === 3) {
+        if (id.substr(0,2) == 'pt') {
+            if (level > 1) {
                 tr.className = '';
             }
             else {
@@ -141,6 +134,7 @@ function showCase(level) {
         }
     }
 }
+
 
 function showClassDetail(cid, count) {
     var id_list = Array(count);
@@ -153,10 +147,6 @@ function showClassDetail(cid, count) {
             tid = 'p' + tid0;
             tr = document.getElementById(tid);
         }
-        if (!tr) {
-            tid = 's' + tid0;
-            tr = document.getElementById(tid);
-        }
         id_list[i] = tid;
         if (tr.className) {
             toHide = 0;
@@ -165,9 +155,7 @@ function showClassDetail(cid, count) {
     for (var i = 0; i < count; i++) {
         tid = id_list[i];
         if (toHide) {
-            if(document.getElementById('div_'+tid)){
-                document.getElementById('div_'+tid).style.display = 'none'
-            }            
+            document.getElementById('div_'+tid).style.display = 'none'
             document.getElementById(tid).className = 'hiddenRow';
         }
         else {
@@ -303,8 +291,7 @@ function showOutput(id, name) {
     <p id='show_detail_line'>
     <span class="label label-primary" onclick="showCase(0)">Summary</span>
     <span class="label label-danger" onclick="showCase(1)">Failed</span>
-    <span class="label label-info" onclick="showCase(2)">Skip</span>
-    <span class="label label-default" onclick="showCase(3)">All</span>
+    <span class="label label-default" onclick="showCase(2)">All</span>
     </p>
 </div>
 <div>
@@ -316,7 +303,6 @@ function showOutput(id, name) {
             <th>Pass</td>
             <th>Fail</td>
             <th>Error</td>
-            <th>Skip</td>
             <th>View</td>
         </tr>
     </thead>
@@ -330,7 +316,6 @@ function showOutput(id, name) {
             <td class="text text-success">%(Pass)s</td>
             <td class="text text-danger">%(fail)s</td>
             <td class="text text-warning">%(error)s</td>
-            <td class="text text-warning">%(skip)s</td>
             <td>&nbsp;</td>
         </tr>
     </tfoot>
@@ -345,7 +330,6 @@ function showOutput(id, name) {
     <td>%(Pass)s</td>
     <td>%(fail)s</td>
     <td>%(error)s</td>
-    <td>%(skip)s</td>
     <td><a class="btn btn-xs btn-primary"href="javascript:showClassDetail('%(cid)s',%(count)s)">Detail</a></td>
 </tr>
 """  # variables: (style, desc, count, Pass, fail, error, cid)
@@ -407,7 +391,7 @@ function showOutput(id, name) {
 
     REPORT_TEST_OUTPUT_TMPL = r"""
 %(output)s
-"""
+"""  # variables: (id, output)
 
 
 class _TestResult(unittest.TestResult):
@@ -452,6 +436,10 @@ class _TestResult(unittest.TestResult):
         return result
 
     def stopTest(self, test):
+        # Usually one of addSuccess, addError or addFailure would have been called.
+        # But there are some path in unittest that would bypass this.
+        # We must disconnect stdout in stopTest(), which is guaranteed to be called.
+
         self.complete_output()
 
     def addSuccess(self, test):
@@ -471,7 +459,6 @@ class _TestResult(unittest.TestResult):
     def addSkip(self, test, reason):
         self.skip_count += 1
         super().addSkip(test, reason)
-        self.result.append((3, test, "", "", 0.0))
 
     def addFailure(self, test, err):
         self.failure_count += 1
@@ -479,6 +466,7 @@ class _TestResult(unittest.TestResult):
         _, _exc_str = self.failures[-1]
         output = self.complete_output()
         self.result.append((1, test, output, _exc_str, self._case_run_time))
+
         log.error('TestCase Failed')
 
 
@@ -496,7 +484,7 @@ class BSTestRunner(Template_mixin):
         result = _TestResult(self.verbosity)
         test(result)
         self.stop_time = datetime.datetime.now()
-        self.generateReport(result)
+        self.generateReport(test, result)
         log.info('Time Elapsed: %s' % (self.stop_time - self.start_time))
 
         shutil.copy2(r"..\utx\template.html", r"report\report.html")
@@ -528,8 +516,6 @@ class BSTestRunner(Template_mixin):
             status.append('<span class="text text-danger">Failure <strong>%s</strong></span>' % result.failure_count)
         if result.error_count:
             status.append('<span class="text text-warning">Error <strong>%s</strong></span>' % result.error_count)
-        if result.skip_count:
-            status.append('<span class="text text-info">Skip <strong>%s</strong></span>' % result.skip_count)
         if status:
             status = ' '.join(status)
         else:
@@ -580,16 +566,14 @@ class BSTestRunner(Template_mixin):
         rows = []
         sorted_result = self.sortResult(result.result)
         for cid, (cls, cls_results) in enumerate(sorted_result):
-            pass_num = fail_num = error_num = skip_num = 0
+            pass_num = fail_num = error_num = 0
             for case_state, *_ in cls_results:
                 if case_state == 0:
                     pass_num += 1
                 elif case_state == 1:
                     fail_num += 1
-                elif case_state == 2:
-                    error_num += 1
                 else:
-                    skip_num += 1
+                    error_num += 1
 
             name = "{}.{}".format(cls.__module__, cls.__name__)
             doc = cls.__doc__ and cls.__doc__.split("\n")[0] or ""
@@ -600,11 +584,10 @@ class BSTestRunner(Template_mixin):
             row = self.REPORT_CLASS_TMPL % dict(
                 style=error_num > 0 and 'text text-warning' or fail_num > 0 and 'text text-danger' or 'text text-success',
                 desc=desc,
-                count=pass_num + fail_num + error_num + skip_num,
+                count=pass_num + fail_num + error_num,
                 Pass=pass_num,
                 fail=fail_num,
                 error=error_num,
-                skip=skip_num,
                 cid='c%s' % (cid + 1),
             )
             rows.append(row)
@@ -614,11 +597,10 @@ class BSTestRunner(Template_mixin):
 
         report = self.REPORT_TMPL % dict(
             test_list=''.join(rows),
-            count=str(result.success_count + result.failure_count + result.error_count + result.skip_count),
+            count=str(result.success_count + result.failure_count + result.error_count),
             Pass=str(result.success_count),
             fail=str(result.failure_count),
             error=str(result.error_count),
-            skip=str(result.skip_count),
         )
 
         result_data["testPass"] = result.success_count
@@ -628,23 +610,16 @@ class BSTestRunner(Template_mixin):
 
         return report
 
-    def _generate_report_test(self, rows, class_id, case_id, n, t, o, e, run_time):
+    def _generate_report_test(self, rows, cid, tid, n, t, o, e, run_time):
         has_output = bool(o or e)
-        if n == 0:
-            case_tr_id = "pt{}.{}".format(class_id + 1, case_id + 1)
-        if n == 1:
-            case_tr_id = "ft{}.{}".format(class_id + 1, case_id + 1)
-        if n == 2:
-            case_tr_id = "ft{}.{}".format(class_id + 1, case_id + 1)
-        if n == 3:
-            case_tr_id = "st{}.{}".format(class_id + 1, case_id + 1)
+        tid = (n == 0 and 'p' or 'f') + 't%s.%s' % (cid + 1, tid + 1)
         name = t.id().split('.')[-1]
         doc = t.shortDescription() or ""
         desc = doc and ('%s: %s' % (name, doc)) or name
         tmpl_pass = has_output and self.REPORT_TEST_WITH_OUTPUT_TMPL_PASS or self.REPORT_TEST_NO_OUTPUT_TMPL
         tmpl_fail = has_output and self.REPORT_TEST_WITH_OUTPUT_TMPL_FAIL or self.REPORT_TEST_NO_OUTPUT_TMPL
 
-        ouptut = self.REPORT_TEST_OUTPUT_TMPL % dict(
+        script = self.REPORT_TEST_OUTPUT_TMPL % dict(
             output=saxutils.escape(o + e),
         )
 
@@ -655,32 +630,30 @@ class BSTestRunner(Template_mixin):
         case_data['spendTime'] = "{:.2}S".format(run_time)
         case_data['description'] = doc
         case_data['log'] = o + e
-        if self.STATUS[n] == "Pass":
+        if self.STATUS[n] == "pass":
             case_data['status'] = "成功"
-        if self.STATUS[n] == "Fail":
+        if self.STATUS[n] == "fail":
             case_data['status'] = "失败"
-        if self.STATUS[n] == "Error":
+        if self.STATUS[n] == "error":
             case_data['status'] = "错误"
-        if self.STATUS[n] == "Skip":
-            case_data['status'] = "跳过"
         result_data['testResult'].append(case_data)
+        if self.STATUS[n] == "pass":
 
-        if self.STATUS[n] == "Pass":
             row = tmpl_pass % dict(
-                tid=case_tr_id,
+                tid=tid,
                 Class=(n == 0 and 'hiddenRow' or 'text text-success'),
                 style=n == 2 and 'text text-warning' or (n == 1 and 'text text-danger' or 'text text-success'),
                 desc=desc,
-                script=ouptut,
+                script=script,
                 status=self.STATUS[n],
             )
         else:
             row = tmpl_fail % dict(
-                tid=case_tr_id,
+                tid=tid,
                 Class=(n == 0 and 'hiddenRow' or 'text text-success'),
                 style=n == 2 and 'text text-warning' or (n == 1 and 'text text-danger' or 'text text-success'),
                 desc=desc,
-                script=ouptut,
+                script=script,
                 status=self.STATUS[n],
             )
 

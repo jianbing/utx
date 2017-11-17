@@ -10,12 +10,23 @@ from utx.setting import setting
 from . import log
 from .case_tag import Tag
 
-CASE_TAG_FLAG = "__case_level__"
+CASE_TAG_FLAG = "__case_tag__"
 CASE_DATA_FLAG = "__case_data__"
 CASE_ID_FLAG = "__case_id__"
 CASE_INFO_FLAG = "__case_info__"
+CASE_SKIP_FLAG = "__unittest_skip__"
+CASE_SKIP_REASON_FLAG = "__unittest_skip_why__"
 
-__all__ = ["data", "stop_patch", "Tag", "tag", "setting"]
+__all__ = ["data", "skip", "stop_patch", "Tag", "tag", "setting"]
+
+
+def skip(reason):
+    def wrap(func):
+        setattr(func, CASE_SKIP_FLAG, True)
+        setattr(func, CASE_SKIP_REASON_FLAG, reason)
+        return func
+
+    return wrap
 
 
 def data(*values):
@@ -107,18 +118,19 @@ class Tool:
                 cases[i] = funcs_dict[i]
             else:
                 funcs[i] = funcs_dict[i]
+
         return funcs, sorted(cases.items(), key=lambda x: x[-1].__code__.co_firstlineno)
 
 
 def _feed_data(*args, **kwargs):
-    def _wrap(func):
+    def wrap(func):
         @functools.wraps(func)
-        def __wrap(self):
+        def _wrap(self):
             return func(self, *args, **kwargs)
 
-        return __wrap
+        return _wrap
 
-    return _wrap
+    return wrap
 
 
 class Meta(type):
