@@ -80,5 +80,3 @@ youtube_dl_gui/
 local_config.py
 
 *.bak
-
-report/

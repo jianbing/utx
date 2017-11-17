@@ -499,9 +499,10 @@ class BSTestRunner(Template_mixin):
         self.generateReport(result)
         log.info('Time Elapsed: %s' % (self.stop_time - self.start_time))
 
-        shutil.copy2(r"..\utx\template.html", r"report\report.html")
-        with open(r"report\report.html", "r+", encoding='utf-8') as f:
-            content = f.read().replace("__result_data__", json.dumps(result_data, ensure_ascii=False, indent=4))
+        file = r"report\report-new-style-{}.html".format(time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime(time.time())))
+        shutil.copy2(r"..\utx\template.html", file)
+        with open(file, "r+", encoding='utf-8') as f:
+            content = f.read().replace(r"${resultData}", json.dumps(result_data, ensure_ascii=False, indent=4))
             f.seek(0)
             f.write(content)
         return result
