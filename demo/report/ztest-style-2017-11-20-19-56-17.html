@@ -6962,6 +6962,7 @@
 </head>
 <body class="gray-bg">
 <div class="wrapper wrapper-content animated fadeInRight">
+    <div id="error_case" class="alert alert-danger" role="alert">测试用例加载的时候发生错误！</div>
     <div class="row">
         <div class="col-sm-12">
             <div class="ibox float-e-margins">
@@ -7049,7 +7050,7 @@
                 <div class="ibox-content">
                     <div class="input-group panel-heading"
                          style="width: 100%; background-color: #1ab394; margin-bottom: 10px; text-align: left; font-family: Consolas;">
-                        <label style="color: snow">测试方法:</label>
+                        <label style="color: snow">测试类:</label>
                         <select class="chosen-select form-control" data-placeholder="----------" style="width: 300px;"
                                 name="filterClass" id="filterClass">
                             <option value="">----------</option>
@@ -7058,7 +7059,7 @@
                         <label style="color: snow">只看:</label>
                         <select class="chosen-select form-control" data-placeholder="----------" style="width: 150px;"
                                 name="filterResult" id="filterResult">
-                            <option value="">----------</option>
+                            <option id="filterResultOption" value="">----------</option>
                         </select>
                         <div style="width: 20%; float: right">
                             <label class="form-control">
@@ -7082,7 +7083,7 @@
                             <th>用例描述</th>
                             <th>耗时</th>
                             <th>结果</th>
-                            <th>操作</th>
+                            <th>日志</th>
                         </tr>
                         </thead>
                         <tbody id="detailBody">
@@ -7095,7 +7096,7 @@
 </div>
 <script src="https://cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
 <script src="https://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-<script src="js/content.min.js?v=1.0.0"></script>
+<!--<script src="js/content.min.js?v=1.0.0"></script>-->
 <script src="https://cdn.bootcss.com/echarts/3.8.5/echarts.min.js"></script>
 <script src="https://cdn.bootcss.com/chosen/1.8.2/chosen.jquery.js"></script>
 <script type="text/javascript">
@@ -7168,15 +7169,15 @@
         {
             "className": "legion.test_legion.TestLegion",
             "methodName": "test_00009_quit_legion",
-            "spendTime": "0.1S",
+            "spendTime": "0.11S",
             "description": "退出军团",
             "log": "吧啦啦啦啦啦啦\nTraceback (most recent call last):\n  File \"C:\\github\\github\\utx\\utx\\utx.py\", line 63, in __handler\n    result = func(*args, **kwargs)\n  File \"C:\\github\\github\\utx\\demo\\testcase\\legion\\test_legion.py\", line 38, in test_quit_legion\n    assert 1 == 2\nAssertionError\n",
             "status": "失败"
         }
     ],
     "testName": "接口自动化测试报告",
-    "beginTime": "2017-11-20 16:15:22",
-    "totalTime": "0:00:00.602842",
+    "beginTime": "2017-11-20 19:56:16",
+    "totalTime": "0:00:00.613105",
     "testPass": 5,
     "testAll": 9,
     "testFail": 1,
@@ -7186,14 +7187,13 @@
     function details(obj) {
         if ($(obj).text() == '展开') {
             var len = $(obj).parent().parent().children().length;
-            var detailLog = "";
             var logs = resultData["testResult"][parseInt($(obj).attr("buttonIndex"))]["log"];
             $(obj).text("收缩");
             $(obj).removeClass("btn-primary");
             $(obj).addClass("btn-danger");
-            $.each(logs, function (i, n) {
-                detailLog = detailLog + "<p>" + n + "</p>";
-            });
+
+            var detailLog = "<pre>" + logs + "</pre>";
+
             $(obj).parent().parent().after("<tr><td colspan='" + len + "'><div style='font-family: Consolas;font-size:12px'>" + detailLog + "</div></td></tr>");
         } else if ($(obj).text() == '收缩') {
             $(obj).parent().parent().next().remove();
@@ -7233,30 +7233,48 @@
         $("#filterClass").chosen({search_contains: true});
         $("#filterResult").chosen({search_contains: true});
 
+        var error_case_flag = false;
+
         function generateResult(className, caseResult) {
             $("#detailBody").children().remove();
             var filterAll = 0;
             var filterOk = 0;
             var filterFail = 0;
             var filterSkip = 0;
+
             $.each(resultData["testResult"], function (i, n) {
-                if ((className == "" || n["className"] == className) && (caseResult == "" || n["status"] == caseResult)) {
+                if ((className === "" || n["className"] === className) && (caseResult === "" || n["status"] === caseResult)) {
                     filterAll += 1;
                     var status = "";
-                    if (n["status"] == '成功') {
+                    if (n["status"] === '成功') {
                         filterOk += 1;
                         status = "<td><span class='text-navy'>成功</span></td>";
-                    } else if (n["status"] == '失败') {
+                    } else if (n["status"] === '失败') {
                         filterFail += 1;
                         status = "<td><span class='text-danger'>失败</span></td>";
-                    } else if (n["status"] == '跳过') {
+                    } else if (n["status"] === '跳过') {
                         filterSkip += 1;
                         status = "<td><span class='text-warning'>跳过</span></td>";
                     } else {
-                        status = "<td><span>" + n["status"] + "</span></td>";
+                        status = "<td><span class='text-danger'>" + n["status"] + "！！！</span></td>";
+                        error_case_flag = true;
                     }
-                    var tr = "<tr style='font-family: Consolas'><td>" + (i + 1) + "</td><td>" + n["className"] + "</td><td>" + n["methodName"] + "</td><td>" + n["description"] + "</td><td>" + n["spendTime"] + "</td>" +
-                        status + "<td><button type='button' onclick='details(this)' buttonIndex='" + i + "' class='btn btn-primary btn-xs' style='margin-bottom: 0px'>展开</button></td></tr>"
+                    var tr = "<tr style='font-family: Consolas,serif'>" +
+                        "<td>" + (i + 1) + "</td>" +
+                        "<td>" + n["className"] + "</td>" +
+                        "<td>" + n["methodName"] + "</td>" +
+                        "<td>" + n["description"] + "</td>" +
+                        "<td>" + n["spendTime"] + "</td>" +
+                        status;
+                    if (n["log"]) {
+
+                        tr = tr + "<td><button type='button' onclick='details(this)' buttonIndex='" + i + "' class='btn btn-primary btn-xs' style='margin-bottom: 0px'>展开</button></td></tr>";
+                    }
+                    else {
+                        tr = tr + "<td></td>";
+                    }
+
+
                     $("#detailBody").append(tr);
                 }
             });
@@ -7264,10 +7282,18 @@
             $("#filterOk").text(filterOk);
             $("#filterFail").text(filterFail);
             $("#filterSkip").text(filterSkip);
+
+
         }
 
         generateResult("", "");
-
+        $("#error_case").hide();
+        if (error_case_flag) {
+            var className = $("#filterClass").val();
+            var caseResult = "错误";
+            $("#error_case").show();
+            generateResult(className, caseResult);
+        }
         $("#filterClass").on('change', function () {
             var className = $("#filterClass").val();
             var caseResult = $("#filterResult").val();
@@ -7327,6 +7353,7 @@
 
         pie();
     });
+
 
 </script>
 </body>
