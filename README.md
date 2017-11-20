@@ -74,6 +74,10 @@ class TestLegion(unittest.TestCase):
 
 - 集成 [ztest](https://github.com/zhangfei19841004/ztest) 和 [BSTestRunner](https://github.com/easonhan007/HTMLTestRunner) 自动生成两份测试报告，感谢两位作者的测试报告模版~
 
+![ztest风格](https://github.com/jianbing/utx/raw/master/img/ztest.png)
+
+![BSTest风格](https://github.com/jianbing/utx/raw/master/img/bstest.png)
+
 - 无缝接入unittest项目，导入utx包即可开始使用扩展功能，无需修改之前的代码
 
 运行demo目录下的run.py，开始体验吧~
