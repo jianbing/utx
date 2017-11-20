@@ -497,9 +497,10 @@ class BSTestRunner(Template_mixin):
         test(result)
         self.stop_time = datetime.datetime.now()
         self.generateReport(result)
-        log.info('Time Elapsed: %s' % (self.stop_time - self.start_time))
+        log.info('Time Elapsed: {}'.format(self.stop_time - self.start_time))
 
-        file = r"report\report-new-style-{}.html".format(time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime(time.time())))
+        file = r"report\ztest-style-{}.html".format(
+            time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime(time.time())))
         shutil.copy2(r"..\utx\template.html", file)
         with open(file, "r+", encoding='utf-8') as f:
             content = f.read().replace(r"${resultData}", json.dumps(result_data, ensure_ascii=False, indent=4))
@@ -507,7 +508,7 @@ class BSTestRunner(Template_mixin):
             f.write(content)
         return result
 
-    def sortResult(self, case_results):
+    def sort_result(self, case_results):
         rmap = {}
         classes = []
         for n, t, o, e, run_time in case_results:
@@ -520,7 +521,7 @@ class BSTestRunner(Template_mixin):
         return r
 
     def getReportAttributes(self, result):
-        startTime = str(self.start_time)[:19]
+        start_time = str(self.start_time)[:19]
         duration = str(self.stop_time - self.start_time)
         status = []
         if result.success_count:
@@ -537,10 +538,10 @@ class BSTestRunner(Template_mixin):
             status = 'none'
 
         result_data["testName"] = self.title
-        result_data["beginTime"] = startTime
+        result_data["beginTime"] = start_time
         result_data["totalTime"] = duration
         return [
-            ('Start Time', startTime),
+            ('Start Time', start_time),
             ('Duration', duration),
             ('Status', status),
         ]
@@ -579,7 +580,7 @@ class BSTestRunner(Template_mixin):
 
     def _generate_report(self, result):
         rows = []
-        sorted_result = self.sortResult(result.result)
+        sorted_result = self.sort_result(result.result)
         for cid, (cls, cls_results) in enumerate(sorted_result):
             pass_num = fail_num = error_num = skip_num = 0
             for case_state, *_ in cls_results:

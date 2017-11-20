@@ -7099,7 +7099,89 @@
 <script src="https://cdn.bootcss.com/echarts/3.8.5/echarts.min.js"></script>
 <script src="https://cdn.bootcss.com/chosen/1.8.2/chosen.jquery.js"></script>
 <script type="text/javascript">
-    var resultData = ${resultData};
+    var resultData = {
+    "testResult": [
+        {
+            "className": "battle.test_tattle.TestBattle",
+            "methodName": "test_00001_fight",
+            "spendTime": "0.1S",
+            "description": "测试战斗",
+            "log": "fight\n",
+            "status": "成功"
+        },
+        {
+            "className": "chat.test_chat.TestChat",
+            "methodName": "test_00002_chat_in_world_channel",
+            "spendTime": "0.1S",
+            "description": "测试世界聊天",
+            "log": "进行聊天\n",
+            "status": "成功"
+        },
+        {
+            "className": "legion.test_legion.TestLegion",
+            "methodName": "test_00003_create_legion",
+            "spendTime": "0.1S",
+            "description": "创建军团",
+            "log": "",
+            "status": "成功"
+        },
+        {
+            "className": "legion.test_legion.TestLegion",
+            "methodName": "test_00004_bless_00001_gold_100",
+            "spendTime": "0.1S",
+            "description": "",
+            "log": "gold\n100\n",
+            "status": "成功"
+        },
+        {
+            "className": "legion.test_legion.TestLegion",
+            "methodName": "test_00005_bless_00002_diamond_500",
+            "spendTime": "0.1S",
+            "description": "",
+            "log": "diamond\n500\n",
+            "status": "成功"
+        },
+        {
+            "className": "legion.test_legion.TestLegion",
+            "methodName": "test_00006_receive_bless_box_00001_10001",
+            "spendTime": "0.0S",
+            "description": "领取祈福宝箱",
+            "log": "",
+            "status": "跳过"
+        },
+        {
+            "className": "legion.test_legion.TestLegion",
+            "methodName": "test_00007_receive_bless_box_00002_10002",
+            "spendTime": "0.0S",
+            "description": "领取祈福宝箱",
+            "log": "",
+            "status": "跳过"
+        },
+        {
+            "className": "legion.test_legion.TestLegion",
+            "methodName": "test_00008_receive_bless_box_00003_10003",
+            "spendTime": "0.0S",
+            "description": "领取祈福宝箱",
+            "log": "",
+            "status": "跳过"
+        },
+        {
+            "className": "legion.test_legion.TestLegion",
+            "methodName": "test_00009_quit_legion",
+            "spendTime": "0.1S",
+            "description": "退出军团",
+            "log": "吧啦啦啦啦啦啦\nTraceback (most recent call last):\n  File \"C:\\github\\github\\utx\\utx\\utx.py\", line 63, in __handler\n    result = func(*args, **kwargs)\n  File \"C:\\github\\github\\utx\\demo\\testcase\\legion\\test_legion.py\", line 38, in test_quit_legion\n    assert 1 == 2\nAssertionError\n",
+            "status": "失败"
+        }
+    ],
+    "testName": "接口自动化测试报告",
+    "beginTime": "2017-11-20 16:15:22",
+    "totalTime": "0:00:00.602842",
+    "testPass": 5,
+    "testAll": 9,
+    "testFail": 1,
+    "testSkip": 3
+};
 
     function details(obj) {
         if ($(obj).text() == '展开') {

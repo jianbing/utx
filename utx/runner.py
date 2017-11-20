@@ -11,7 +11,7 @@ class TestRunner:
         if not os.path.exists("report"):
             os.mkdir("report")
 
-        report_file = r"report\report-{}.html".format(time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime(time.time())))
+        report_file = r"report\bstest-style-{}.html".format(time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime(time.time())))
 
         suite = unittest.TestLoader().discover(path)
         with open(report_file, "wb") as f:
