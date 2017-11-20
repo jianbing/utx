@@ -2,7 +2,6 @@
 # -*- coding: UTF-8 -*-
 
 import unittest
-from utx import *
 
 
 class TestChat(unittest.TestCase):

@@ -2,7 +2,6 @@
 # -*- coding: UTF-8 -*-
 
 import unittest
-from utx import *
 
 
 class TestBattle(unittest.TestCase):
@@ -12,3 +11,17 @@ class TestBattle(unittest.TestCase):
         :return:
         """
         print("fight")
+
+    def test_skill_buff(self):
+        """测试技能buff
+
+        :return:
+        """
+        print("over")
+
+    def test_normal_attack(self):
+        """测试普通攻击
+
+        :return:
+        """
+        print("normal attack")

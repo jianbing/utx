@@ -1,4 +1,4 @@
-### utx
+## utx
 
 ---
 
@@ -89,4 +89,11 @@ class TestLegion(unittest.TestCase):
 
 - 无缝接入unittest项目，导入utx包即可开始使用扩展功能，无需修改之前的代码
 
-运行demo目录下的run.py，开始体验吧~
+---
+
+demo目录下，有两个例子：
+
+- run.py，体验utx的完整功能~
+
+- just_use_report.py 单独使用测试报告组件，不需要utx的其他扩展功能
+
