@@ -11,12 +11,10 @@ class TestRunner:
         if not os.path.exists("report"):
             os.mkdir("report")
 
-        report_file = r"report\bstest-style-{}.html".format(time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime(time.time())))
-
+        report_dir = os.path.abspath("report")
         suite = unittest.TestLoader().discover(path)
-        with open(report_file, "wb") as f:
-            runner = BSTestRunner(stream=f, title=title)
-            runner.run(suite)
+
+        BSTestRunner(report_dir=report_dir, title=title).run(suite)
 
         print("测试完成，请查看报告")
         os.system("start report")

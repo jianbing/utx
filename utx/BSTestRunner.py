@@ -32,6 +32,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 import json
 import shutil
 import time
+
+import os
+
 from . import log
 import datetime
 import io
@@ -42,33 +45,9 @@ from xml.sax import saxutils
 __author__ = "Wai Yip Tung && Eason Han"
 __version__ = "0.8.4"
 
-result_data = {}
+result_data = dict()
 result_data['testResult'] = []
 current_class_name = ""
-
-
-def to_unicode(s):
-    try:
-        return str(s)
-    except UnicodeDecodeError:
-        # s is non ascii byte string
-        return s.decode('unicode_escape')
-
-
-class OutputRedirector(object):
-    """ Wrapper to redirect stdout or stderr """
-
-    def __init__(self, fp):
-        self.fp = fp
-
-    def write(self, s):
-        self.fp.write(s)
-
-    def writelines(self, lines):
-        self.fp.writelines(lines)
-
-    def flush(self):
-        self.fp.flush()
 
 
 class Template_mixin:
@@ -428,23 +407,16 @@ class _TestResult(unittest.TestResult):
     def startTest(self, test):
         self._case_start_time = time.time()
         super().startTest(test)
-        # stdout_redirector.fp = self.outputBuffer
-        # stderr_redirector.fp = self.outputBuffer
         self.raw_stdout = sys.stdout
         self.raw_stderr = sys.stderr
         sys.stdout = self.outputBuffer
         sys.stderr = self.outputBuffer
-
-        # sys.stdout = stdout_redirector
-        # sys.stderr = stderr_redirector
 
     def complete_output(self):
         self._case_run_time = time.time() - self._case_start_time
         if self.raw_stdout:
             sys.stdout = self.raw_stdout
             sys.stderr = self.raw_stderr
-            # self.raw_stdout = None
-            # self.raw_stderr = None
 
         result = self.outputBuffer.getvalue()
         self.outputBuffer.seek(0)
@@ -483,8 +455,8 @@ class _TestResult(unittest.TestResult):
 
 
 class BSTestRunner(Template_mixin):
-    def __init__(self, title, stream=sys.stdout, verbosity=1, description=""):
-        self.stream = stream
+    def __init__(self, title, report_dir, verbosity=1, description=""):
+        self.report_dir = report_dir
         self.verbosity = verbosity
         self.title = title
         self.description = description
@@ -496,11 +468,10 @@ class BSTestRunner(Template_mixin):
         result = _TestResult(self.verbosity)
         test(result)
         self.stop_time = datetime.datetime.now()
-        self.generateReport(result)
+        self.generate_report(result)
         log.info('Time Elapsed: {}'.format(self.stop_time - self.start_time))
 
-        file = r"report\ztest-style-{}.html".format(
-            time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime(time.time())))
+        file = os.path.join(self.report_dir, r"{}-ztest.html".format(self.start_time.strftime("%Y-%m-%d-%H-%M-%S")))
         shutil.copy2(r"..\utx\template.html", file)
         with open(file, "r+", encoding='utf-8') as f:
             content = f.read().replace(r"${resultData}", json.dumps(result_data, ensure_ascii=False, indent=4))
@@ -508,7 +479,8 @@ class BSTestRunner(Template_mixin):
             f.write(content)
         return result
 
-    def sort_result(self, case_results):
+    @staticmethod
+    def sort_result(case_results):
         rmap = {}
         classes = []
         for n, t, o, e, run_time in case_results:
@@ -520,7 +492,7 @@ class BSTestRunner(Template_mixin):
         r = [(cls, rmap[cls]) for cls in classes]
         return r
 
-    def getReportAttributes(self, result):
+    def get_report_attributes(self, result):
         start_time = str(self.start_time)[:19]
         duration = str(self.stop_time - self.start_time)
         status = []
@@ -546,8 +518,8 @@ class BSTestRunner(Template_mixin):
             ('Status', status),
         ]
 
-    def generateReport(self, result):
-        report_attrs = self.getReportAttributes(result)
+    def generate_report(self, result):
+        report_attrs = self.get_report_attributes(result)
         generator = 'BSTestRunner %s' % __version__
         stylesheet = self._generate_stylesheet()
         heading = self._generate_heading(report_attrs)
@@ -558,7 +530,10 @@ class BSTestRunner(Template_mixin):
             stylesheet=stylesheet,
             heading=heading,
             report=report)
-        self.stream.write(output.encode('utf8'))
+
+        with open(os.path.join(self.report_dir, "{}-bstest.html".format(self.start_time.strftime("%Y-%m-%d-%H-%M-%S"))),
+                  "wb") as f:
+            f.write(output.encode('utf8'))
 
     def _generate_stylesheet(self):
         return self.STYLESHEET_TMPL

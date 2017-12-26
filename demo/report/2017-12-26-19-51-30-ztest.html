@@ -6962,7 +6962,7 @@
 </head>
 <body class="gray-bg">
 <div class="wrapper wrapper-content animated fadeInRight">
-    <div id="error_case" class="alert alert-danger" role="alert">测试用例加载的时候发生错误！</div>
+    <div id="error_case" class="alert alert-danger" role="alert">测试结果里边有报错的用例，请优先处理！</div>
     <div class="row">
         <div class="col-sm-12">
             <div class="ibox float-e-margins">
@@ -7111,8 +7111,24 @@
             "status": "成功"
         },
         {
+            "className": "battle.test_tattle.TestBattle",
+            "methodName": "test_00002_skill_buff",
+            "spendTime": "0.1S",
+            "description": "测试技能buff",
+            "log": "over\n",
+            "status": "成功"
+        },
+        {
+            "className": "battle.test_tattle.TestBattle",
+            "methodName": "test_00003_normal_attack",
+            "spendTime": "0.1S",
+            "description": "测试普通攻击",
+            "log": "normal attack\n",
+            "status": "成功"
+        },
+        {
             "className": "chat.test_chat.TestChat",
-            "methodName": "test_00002_chat_in_world_channel",
+            "methodName": "test_00004_chat_in_world_channel",
             "spendTime": "0.1S",
             "description": "测试世界聊天",
             "log": "进行聊天\n",
@@ -7120,7 +7136,7 @@
         },
         {
             "className": "legion.test_legion.TestLegion",
-            "methodName": "test_00003_create_legion",
+            "methodName": "test_00005_create_legion",
             "spendTime": "0.1S",
             "description": "创建军团",
             "log": "",
@@ -7128,7 +7144,7 @@
         },
         {
             "className": "legion.test_legion.TestLegion",
-            "methodName": "test_00004_bless_00001_gold_100",
+            "methodName": "test_00006_bless_00001_gold_100",
             "spendTime": "0.1S",
             "description": "",
             "log": "gold\n100\n",
@@ -7136,7 +7152,7 @@
         },
         {
             "className": "legion.test_legion.TestLegion",
-            "methodName": "test_00005_bless_00002_diamond_500",
+            "methodName": "test_00007_bless_00002_diamond_500",
             "spendTime": "0.1S",
             "description": "",
             "log": "diamond\n500\n",
@@ -7144,7 +7160,7 @@
         },
         {
             "className": "legion.test_legion.TestLegion",
-            "methodName": "test_00006_receive_bless_box_00001_10001",
+            "methodName": "test_00008_receive_bless_box_00001_10001",
             "spendTime": "0.0S",
             "description": "领取祈福宝箱",
             "log": "",
@@ -7152,7 +7168,7 @@
         },
         {
             "className": "legion.test_legion.TestLegion",
-            "methodName": "test_00007_receive_bless_box_00002_10002",
+            "methodName": "test_00009_receive_bless_box_00002_10002",
             "spendTime": "0.0S",
             "description": "领取祈福宝箱",
             "log": "",
@@ -7160,7 +7176,7 @@
         },
         {
             "className": "legion.test_legion.TestLegion",
-            "methodName": "test_00008_receive_bless_box_00003_10003",
+            "methodName": "test_00010_receive_bless_box_00003_10003",
             "spendTime": "0.0S",
             "description": "领取祈福宝箱",
             "log": "",
@@ -7168,18 +7184,18 @@
         },
         {
             "className": "legion.test_legion.TestLegion",
-            "methodName": "test_00009_quit_legion",
-            "spendTime": "0.11S",
+            "methodName": "test_00011_quit_legion",
+            "spendTime": "0.1S",
             "description": "退出军团",
             "log": "吧啦啦啦啦啦啦\nTraceback (most recent call last):\n  File \"C:\\github\\github\\utx\\utx\\utx.py\", line 63, in __handler\n    result = func(*args, **kwargs)\n  File \"C:\\github\\github\\utx\\demo\\testcase\\legion\\test_legion.py\", line 38, in test_quit_legion\n    assert 1 == 2\nAssertionError\n",
             "status": "失败"
         }
     ],
     "testName": "接口自动化测试报告",
-    "beginTime": "2017-11-20 19:56:16",
-    "totalTime": "0:00:00.613105",
-    "testPass": 5,
-    "testAll": 9,
+    "beginTime": "2017-12-26 19:51:30",
+    "totalTime": "0:00:00.803107",
+    "testPass": 7,
+    "testAll": 11,
     "testFail": 1,
     "testSkip": 3
 };
