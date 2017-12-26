@@ -30,6 +30,21 @@ def skip(reason):
 
 
 def data(*values):
+    """注入测试数据，可以做为测试用例的数据驱动
+    1. 单一参数的测试用例
+    @data(10001, 10002, 10003)
+    def test_receive_bless_box(self, box_id):
+        print(box_id)
+
+    2. 多个参数的测试用例
+    @data(["gold", 100], ["diamond", 500])
+    def test_bless(self, bless_type, award):
+        print(bless_type)
+        print(award)
+
+    :param values:
+    :return:
+    """
     def wrap(func):
         if hasattr(func, CASE_DATA_FLAG):
             log.error("{}的测试数据只能初始化一次".format(func.__name__))
@@ -40,6 +55,14 @@ def data(*values):
 
 
 def tag(*tag_type):
+    """指定测试用例的标签，可以作为测试用例分组使用，用例默认会有Tag.FULL标签，支持同时设定多个表情，如：
+    @tag(Tag.SP, Tag.FULL)
+    def test_func(self):
+        pass
+
+    :param tag_type:标签类型，在case_tag.py里边自定义
+    :return:
+    """
     def wrap(func):
         if not hasattr(func, CASE_TAG_FLAG):
             tags = {Tag.FULL}
