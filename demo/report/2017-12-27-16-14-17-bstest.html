@@ -187,9 +187,9 @@ function showOutput(id, name) {
 <div class="main_container">
     <div class='heading head_container'>
 <h2>接口自动化测试报告</h2>
-<p><strong>Start Time:</strong> 2017-12-26 19:51:30</p>
-<p><strong>Duration:</strong> 0:00:00.803107</p>
-<p><strong>Status:</strong> <span class="text text-success">Pass <strong>7</strong></span> <span class="text text-danger">Failure <strong>1</strong></span> <span class="text text-info">Skip <strong>3</strong></span></p>
+<p><strong>Start Time:</strong> 2017-12-27 16:14:17</p>
+<p><strong>Duration:</strong> 0:00:01.003930</p>
+<p><strong>Status:</strong> <span class="text text-success">Pass <strong>9</strong></span> <span class="text text-danger">Failure <strong>1</strong></span> <span class="text text-info">Skip <strong>3</strong></span></p>
 
 <p class='description'></p>
 
@@ -222,12 +222,12 @@ function showOutput(id, name) {
         
 <tr class='text text-success'>
     <td>battle.test_tattle.TestBattle</td>
-    <td>3</td>
-    <td>3</td>
+    <td>5</td>
+    <td>5</td>
     <td>0</td>
     <td>0</td>
     <td>0</td>
-    <td><a class="btn btn-xs btn-primary"href="javascript:showClassDetail('c1',3)">Detail</a></td>
+    <td><a class="btn btn-xs btn-primary"href="javascript:showClassDetail('c1',5)">Detail</a></td>
 </tr>
 
 <tr id='pt1.1' class='hiddenRow'>
@@ -305,6 +305,58 @@ normal attack
     </td>
 </tr>
 
+<tr id='pt1.4' class='hiddenRow'>
+    <td class='text text-success'><div class='testcase'>test_00004_hello_world_00001_1000_100: 领取战斗奖励</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link btn btn-xs btn-sg-pass" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.4')" >
+        Pass</a>
+
+    <div id='div_pt1.4' class="popup_window">
+        <div style='text-align: right;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.4').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+{'gold': 1000, 'diamond': 100}
+获得的钻石数量是：100
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='pt1.5' class='hiddenRow'>
+    <td class='text text-success'><div class='testcase'>test_00005_hello_world_00002_2000_200: 领取战斗奖励</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link btn btn-xs btn-sg-pass" onfocus='this.blur();' href="javascript:showTestDetail('div_pt1.5')" >
+        Pass</a>
+
+    <div id='div_pt1.5' class="popup_window">
+        <div style='text-align: right;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_pt1.5').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+{'gold': 2000, 'diamond': 200}
+获得的钻石数量是：200
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
 <tr class='text text-success'>
     <td>chat.test_chat.TestChat</td>
     <td>1</td>
@@ -316,7 +368,7 @@ normal attack
 </tr>
 
 <tr id='pt2.1' class='hiddenRow'>
-    <td class='text text-success'><div class='testcase'>test_00004_chat_in_world_channel: 测试世界聊天</div></td>
+    <td class='text text-success'><div class='testcase'>test_00006_chat_in_world_channel: 测试世界聊天</div></td>
     <td colspan='5' align='center'>
 
     <!--css div popup start-->
@@ -351,12 +403,12 @@ normal attack
 </tr>
 
 <tr id='pt3.1' class='hiddenRow'>
-    <td class='text text-success'><div class='testcase'>test_00005_create_legion: 创建军团</div></td>
+    <td class='text text-success'><div class='testcase'>test_00007_create_legion: 创建军团</div></td>
     <td colspan='5' align='center'>Pass</td>
 </tr>
 
 <tr id='pt3.2' class='hiddenRow'>
-    <td class='text text-success'><div class='testcase'>test_00006_bless_00001_gold_100</div></td>
+    <td class='text text-success'><div class='testcase'>test_00008_bless_00001_gold_100</div></td>
     <td colspan='5' align='center'>
 
     <!--css div popup start-->
@@ -382,7 +434,7 @@ gold
 </tr>
 
 <tr id='pt3.3' class='hiddenRow'>
-    <td class='text text-success'><div class='testcase'>test_00007_bless_00002_diamond_500</div></td>
+    <td class='text text-success'><div class='testcase'>test_00009_bless_00002_diamond_500</div></td>
     <td colspan='5' align='center'>
 
     <!--css div popup start-->
@@ -408,22 +460,22 @@ diamond
 </tr>
 
 <tr id='st3.4' class='text text-success'>
-    <td class='text text-success'><div class='testcase'>test_00008_receive_bless_box_00001_10001: 领取祈福宝箱</div></td>
+    <td class='text text-success'><div class='testcase'>test_00010_receive_bless_box_00001_10001: 领取祈福宝箱</div></td>
     <td colspan='5' align='center'>Skip</td>
 </tr>
 
 <tr id='st3.5' class='text text-success'>
-    <td class='text text-success'><div class='testcase'>test_00009_receive_bless_box_00002_10002: 领取祈福宝箱</div></td>
+    <td class='text text-success'><div class='testcase'>test_00011_receive_bless_box_00002_10002: 领取祈福宝箱</div></td>
     <td colspan='5' align='center'>Skip</td>
 </tr>
 
 <tr id='st3.6' class='text text-success'>
-    <td class='text text-success'><div class='testcase'>test_00010_receive_bless_box_00003_10003: 领取祈福宝箱</div></td>
+    <td class='text text-success'><div class='testcase'>test_00012_receive_bless_box_00003_10003: 领取祈福宝箱</div></td>
     <td colspan='5' align='center'>Skip</td>
 </tr>
 
     <tr id='ft3.7' class='text text-success'>
-        <td class='text text-danger'><div class='testcase'>test_00011_quit_legion: 退出军团</div></td>
+        <td class='text text-danger'><div class='testcase'>test_00013_quit_legion: 退出军团</div></td>
         <td colspan='5' align='center'>
 
         <!--css div popup start-->
@@ -439,7 +491,7 @@ diamond
             
 吧啦啦啦啦啦啦
 Traceback (most recent call last):
-  File "C:\github\github\utx\utx\utx.py", line 63, in __handler
+  File "C:\github\github\utx\utx\utx.py", line 89, in __handler
     result = func(*args, **kwargs)
   File "C:\github\github\utx\demo\testcase\legion\test_legion.py", line 38, in test_quit_legion
     assert 1 == 2
@@ -457,8 +509,8 @@ AssertionError
     <tfoot>
         <tr id='total_row'>
             <td>Total</td>
-            <td>11</td>
-            <td class="text text-success">7</td>
+            <td>13</td>
+            <td class="text text-success">9</td>
             <td class="text text-danger">1</td>
             <td class="text text-warning">0</td>
             <td class="text text-warning">3</td>

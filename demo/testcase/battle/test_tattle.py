@@ -2,6 +2,7 @@
 # -*- coding: UTF-8 -*-
 
 import unittest
+from utx import *
 
 
 class TestBattle(unittest.TestCase):
@@ -25,3 +26,12 @@ class TestBattle(unittest.TestCase):
         :return:
         """
         print("normal attack")
+
+    @data({"gold": 1000, "diamond": 100}, {"gold": 2000, "diamond": 200}, unpack=False)
+    def test_hello_world(self, reward):
+        """ 领取战斗奖励
+
+        :return:
+        """
+        print(reward)
+        print("获得的钻石数量是：{}".format(reward['diamond']))

@@ -12,6 +12,7 @@ from .case_tag import Tag
 
 CASE_TAG_FLAG = "__case_tag__"
 CASE_DATA_FLAG = "__case_data__"
+CASE_DATA_UNPACK_FLAG = "__case_data_unpack__"
 CASE_ID_FLAG = "__case_id__"
 CASE_INFO_FLAG = "__case_info__"
 CASE_SKIP_FLAG = "__unittest_skip__"
@@ -29,7 +30,7 @@ def skip(reason):
     return wrap
 
 
-def data(*values):
+def data(*values, unpack=True):
     """注入测试数据，可以做为测试用例的数据驱动
     1. 单一参数的测试用例
     @data(10001, 10002, 10003)
@@ -42,13 +43,15 @@ def data(*values):
         print(bless_type)
         print(award)
 
-    :param values:
+    :param values:测试数据
+    :param unpack: 是否解包
     :return:
     """
     def wrap(func):
         if hasattr(func, CASE_DATA_FLAG):
             log.error("{}的测试数据只能初始化一次".format(func.__name__))
         setattr(func, CASE_DATA_FLAG, values)
+        setattr(func, CASE_DATA_UNPACK_FLAG, unpack)
         return func
 
     return wrap
@@ -108,11 +111,17 @@ class Tool:
             if isinstance(test_data, list):
 
                 func_name += "_{:05d}_{}".format(index, "_".join([str(_) for _ in test_data]))
-                result[func_name] = _handler(_feed_data(*test_data)(raw_func))
+                if getattr(raw_func, CASE_DATA_UNPACK_FLAG, None):
+                    result[func_name] = _handler(_feed_data(*test_data)(raw_func))
+                else:
+                    result[func_name] = _handler(_feed_data(test_data)(raw_func))
 
             elif isinstance(test_data, dict):
                 func_name += "_{:05d}_{}".format(index, "_".join([str(_) for _ in test_data.values()]))
-                result[func_name] = _handler(_feed_data(**test_data)(raw_func))
+                if getattr(raw_func, CASE_DATA_UNPACK_FLAG, None):
+                    result[func_name] = _handler(_feed_data(**test_data)(raw_func))
+                else:
+                    result[func_name] = _handler(_feed_data(test_data)(raw_func))
 
             elif isinstance(test_data, (int, str, bool, float)):
                 func_name += "_{:05d}_{}".format(index, test_data)
