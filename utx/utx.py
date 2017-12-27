@@ -47,6 +47,7 @@ def data(*values, unpack=True):
     :param unpack: 是否解包
     :return:
     """
+
     def wrap(func):
         if hasattr(func, CASE_DATA_FLAG):
             log.error("{}的测试数据只能初始化一次".format(func.__name__))
@@ -66,6 +67,7 @@ def tag(*tag_type):
     :param tag_type:标签类型，在case_tag.py里边自定义
     :return:
     """
+
     def wrap(func):
         if not hasattr(func, CASE_TAG_FLAG):
             tags = {Tag.FULL}
@@ -101,6 +103,15 @@ class Tool:
         return cls.total_case_num
 
     @staticmethod
+    def general_case_name(func_name, index, test_data: list):
+        if setting.full_case_name:
+            params_str = "_".join([str(_) for _ in test_data]).replace(".", "")
+            func_name += "_{:05d}_{}".format(index, params_str)
+        else:
+            func_name += "_{:05d}".format(index)
+        return func_name
+
+    @staticmethod
     def make_case_from_case_data(raw_func_name, raw_func):
         result = dict()
         for index, test_data in enumerate(getattr(raw_func, CASE_DATA_FLAG), 1):
@@ -109,22 +120,21 @@ class Tool:
             func_name = raw_func_name.replace("test_", "test_{:05d}_".format(case_id))
 
             if isinstance(test_data, list):
-
-                func_name += "_{:05d}_{}".format(index, "_".join([str(_) for _ in test_data]))
+                func_name = Tool.general_case_name(func_name, index, test_data)
                 if getattr(raw_func, CASE_DATA_UNPACK_FLAG, None):
                     result[func_name] = _handler(_feed_data(*test_data)(raw_func))
                 else:
                     result[func_name] = _handler(_feed_data(test_data)(raw_func))
 
             elif isinstance(test_data, dict):
-                func_name += "_{:05d}_{}".format(index, "_".join([str(_) for _ in test_data.values()]))
+                func_name = Tool.general_case_name(func_name, index, test_data.values())
                 if getattr(raw_func, CASE_DATA_UNPACK_FLAG, None):
                     result[func_name] = _handler(_feed_data(**test_data)(raw_func))
                 else:
                     result[func_name] = _handler(_feed_data(test_data)(raw_func))
 
             elif isinstance(test_data, (int, str, bool, float)):
-                func_name += "_{:05d}_{}".format(index, test_data)
+                func_name = Tool.general_case_name(func_name, index, [test_data])
                 result[func_name] = _handler(_feed_data(test_data)(raw_func))
 
             else:

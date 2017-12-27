@@ -15,3 +15,6 @@ class setting:
 
     # 开启检测用例描述
     check_case_doc = True
+
+    # 显示完整用例名字（函数名字+参数信息）
+    full_case_name = False
