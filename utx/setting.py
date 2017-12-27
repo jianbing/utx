@@ -18,3 +18,6 @@ class setting:
 
     # 显示完整用例名字（函数名字+参数信息）
     full_case_name = False
+
+    # 测试报告显示的用例名字最大程度
+    max_case_name_len = 80

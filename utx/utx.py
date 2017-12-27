@@ -82,16 +82,16 @@ def tag(*tag_type):
 
 def _handler(func):
     @functools.wraps(func)
-    def __handler(*args, **kwargs):
+    def wrap(*args, **kwargs):
         time.sleep(setting.execute_interval)
-        msg = "Start to test {} ({}/{})".format(getattr(func, CASE_INFO_FLAG),
+        msg = "start to test {} ({}/{})".format(getattr(func, CASE_INFO_FLAG),
                                                 getattr(func, CASE_ID_FLAG),
                                                 Tool.total_case_num)
         log.info(msg)
         result = func(*args, **kwargs)
         return result
 
-    return __handler
+    return wrap
 
 
 class Tool:
@@ -103,12 +103,14 @@ class Tool:
         return cls.total_case_num
 
     @staticmethod
-    def general_case_name(func_name, index, test_data: list):
+    def general_case_name(func_name, index, test_data):
         if setting.full_case_name:
             params_str = "_".join([str(_) for _ in test_data]).replace(".", "")
             func_name += "_{:05d}_{}".format(index, params_str)
         else:
             func_name += "_{:05d}".format(index)
+        if len(func_name) > setting.max_case_name_len:
+            func_name = func_name[:setting.max_case_name_len]+"……"
         return func_name
 
     @staticmethod
@@ -148,6 +150,8 @@ class Tool:
         setattr(raw_func, CASE_ID_FLAG, case_id)
 
         func_name = raw_func_name.replace("test_", "test_{:05d}_".format(case_id))
+        if len(func_name) > setting.max_case_name_len:
+            func_name = func_name[:setting.max_case_name_len]+"……"
         result[func_name] = _handler(raw_func)
         return result
 
