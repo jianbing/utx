@@ -6,12 +6,12 @@ from utx import *
 
 
 class TestBattle(unittest.TestCase):
-    def test_fight(self):
+    def test_start_battle(self):
         """测试战斗
 
         :return:
         """
-        print("fight")
+        print("start battle")
 
     def test_skill_buff(self):
         """测试技能buff
@@ -28,7 +28,7 @@ class TestBattle(unittest.TestCase):
         print("normal attack")
 
     @data({"gold": 1000, "diamond": 100}, {"gold": 2000, "diamond": 200}, unpack=False)
-    def test_hello_world(self, reward):
+    def test_get_battle_reward(self, reward):
         """ 领取战斗奖励
 
         :return:
