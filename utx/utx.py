@@ -22,10 +22,20 @@ __all__ = ["data", "skip", "stop_patch", "Tag", "tag", "setting"]
 
 
 def skip(reason):
+    # def wrap(func):
+    #     setattr(func, CASE_SKIP_FLAG, True)
+    #     setattr(func, CASE_SKIP_REASON_FLAG, reason)
+    #     return func
+    # return wrap
     def wrap(func):
-        setattr(func, CASE_SKIP_FLAG, True)
-        setattr(func, CASE_SKIP_REASON_FLAG, reason)
-        return func
+        return unittest.skip(reason)(func)
+
+    return wrap
+
+
+def skip_if(condition, reason):
+    def wrap(func):
+        return unittest.skipIf(condition, reason)(func)
 
     return wrap
 
@@ -110,7 +120,7 @@ class Tool:
         else:
             func_name += "_{:05d}".format(index)
         if len(func_name) > setting.max_case_name_len:
-            func_name = func_name[:setting.max_case_name_len]+"……"
+            func_name = func_name[:setting.max_case_name_len] + "……"
         return func_name
 
     @staticmethod
@@ -151,7 +161,7 @@ class Tool:
 
         func_name = raw_func_name.replace("test_", "test_{:05d}_".format(case_id))
         if len(func_name) > setting.max_case_name_len:
-            func_name = func_name[:setting.max_case_name_len]+"……"
+            func_name = func_name[:setting.max_case_name_len] + "……"
         result[func_name] = _handler(raw_func)
         return result
 

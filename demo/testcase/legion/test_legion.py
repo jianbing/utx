@@ -6,6 +6,12 @@ from utx import *
 
 
 class TestLegion(unittest.TestCase):
+    def setUp(self):
+        print('setUp')
+
+    def tearDown(self):
+        print('tearDown')
+
     @tag(Tag.SMOKE)
     def test_create_legion(self):
         """创建军团
