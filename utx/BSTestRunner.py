@@ -472,7 +472,8 @@ class BSTestRunner(Template_mixin):
         log.info('Time Elapsed: {}'.format(self.stop_time - self.start_time))
 
         file = os.path.join(self.report_dir, r"{}-ztest.html".format(self.start_time.strftime("%Y-%m-%d-%H-%M-%S")))
-        shutil.copy2(r"..\utx\template.html", file)
+
+        shutil.copy2(os.path.join(os.path.dirname(__file__), "template.html"), file)
         with open(file, "r+", encoding='utf-8') as f:
             content = f.read().replace(r"${resultData}", json.dumps(result_data, ensure_ascii=False, indent=4))
             f.seek(0)

@@ -6,11 +6,19 @@
 
 utx是对Python unittest的功能进行了扩展，起因是希望可以控制测试用例的执行顺序，unittest的默认执行顺序是按照用例函数的名称进行排序，无法满足需求。所以想要做一个可以无缝接入unittest的扩展功能库。
 
-目前有以下的功能：
 
-- 支持用例排序，只需要导入utx库，用例的执行顺序就会和编写顺序一致
+安装
+---
+```python
+python setup.py install
+```
 
-- 支持用例自定义标签，在 case_tag.py 里边添加标签，可以对测试用例指定多标签
+功能
+---
+
+- 用例排序，只需要导入utx库，用例的执行顺序就会和编写顺序一致
+
+- 用例自定义标签，在 case_tag.py 里边添加标签，可以对测试用例指定多标签
 
 ```python
 @unique
@@ -44,7 +52,7 @@ if __name__ == '__main__':
     runner.run_test(r"testcase")
 ```
 
-- 支持数据驱动
+- 数据驱动
 ```python
 class TestLegion(unittest.TestCase):
 

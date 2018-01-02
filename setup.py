@@ -11,31 +11,21 @@ from shutil import rmtree
 
 from setuptools import find_packages, setup, Command
 
-# Package meta-data.
 NAME = 'utx'
 DESCRIPTION = '对Python unittest的功能进行了扩展'
 URL = 'https://github.com/me/myproject'
 EMAIL = '326333381@qq.com'
 AUTHOR = 'jianbing'
 
-# What packages are required for this module to be executed?
 REQUIRED = [
     'colorama'
 ]
 
-# The rest you shouldn't have to touch too much :)
-# ------------------------------------------------
-# Except, perhaps the License and Trove Classifiers!
-# If you do change the License, remember to change the Trove Classifier for that!
-
 here = os.path.abspath(os.path.dirname(__file__))
 
-# Import the README and use it as the long-description.
-# Note: this will only work if 'README.rst' is present in your MANIFEST.in file!
 with io.open(os.path.join(here, 'README.md'), encoding='utf-8') as f:
     long_description = '\n' + f.read()
 
-# Load the package's __version__.py module as a dictionary.
 about = {}
 with open(os.path.join(here, NAME, '__version__.py')) as f:
     exec(f.read(), about)
@@ -74,7 +64,6 @@ class UploadCommand(Command):
         sys.exit()
 
 
-# Where the magic happens:
 setup(
     name=NAME,
     version=about['__version__'],
@@ -83,9 +72,7 @@ setup(
     author=AUTHOR,
     author_email=EMAIL,
     url=URL,
-    packages=find_packages(),
-    # If your package is a single module, use this instead of 'packages':
-    # py_modules=['mypackage'],
+    packages=find_packages(include=("utx",)),
 
     # entry_points={
     #     'console_scripts': ['mycli=mymodule:cli'],
@@ -100,7 +87,6 @@ setup(
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: Implementation :: CPython',
     ],
-    # $ setup.py publish support.
     cmdclass={
         'upload': UploadCommand,
     },
