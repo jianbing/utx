@@ -21,3 +21,6 @@ class setting:
 
     # 测试报告显示的用例名字最大程度
     max_case_name_len = 80
+
+    # 执行用例的时候，显示报错信息
+    show_error_traceback = True

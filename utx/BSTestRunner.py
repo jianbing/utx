@@ -35,7 +35,7 @@ import time
 
 import os
 
-from . import log
+from . import log, setting
 import datetime
 import io
 import sys
@@ -439,6 +439,8 @@ class _TestResult(unittest.TestResult):
         output = self.complete_output()
         self.result.append((2, test, output, _exc_str, self._case_run_time))
         log.error('TestCase Error')
+        if setting.show_error_traceback:
+            log.error(_exc_str)
 
     def addSkip(self, test, reason):
         self.skip_count += 1
