@@ -28,3 +28,9 @@ class setting:
 
     # 执行用例的时候，显示报错信息
     show_error_traceback = True
+
+    # 生成ztest风格的报告
+    create_ztest_style_report = True
+
+    # 生成bstest风格的报告
+    create_bstest_style_report = True
