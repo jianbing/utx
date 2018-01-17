@@ -11,6 +11,9 @@ class setting:
     # 只运行的用例类型
     run_case = {Tag.SMOKE}
 
+    # 开启用例排序
+    sort_case = True
+
     # 每个用例的执行间隔，单位是秒
     execute_interval = 0.1
 
