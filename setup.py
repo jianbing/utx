@@ -1,19 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# Note: To use the 'upload' functionality of this file, you must:
-#   $ pip install twine
-
 import io
 import os
 import sys
 from shutil import rmtree
-
 from setuptools import find_packages, setup, Command
 
 NAME = 'utx'
 DESCRIPTION = '对Python unittest的功能进行了扩展'
-URL = 'https://github.com/me/myproject'
+URL = 'https://github.com/jianbing/utx'
 EMAIL = '326333381@qq.com'
 AUTHOR = 'jianbing'
 

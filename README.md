@@ -1,19 +1,29 @@
 utx
 ---
 
-> 支持Python3.5及以上版本，请留意~~
+> 支持Python3.5及以上版本
 
-utx是对Python unittest的功能进行了扩展，起因是希望可以控制测试用例的执行顺序，unittest的默认执行顺序是按照用例函数的名称进行排序，无法满足需求。所以想要做一个可以无缝接入unittest的扩展功能库。
+utx扩展了Python unittest框架的功能，起因是需要控制测试用例的执行顺序，而unittest的默认执行顺序是按照用例函数的名称进行排序，所以想要做一个可以无缝接入unittest的扩展功能库。
 
 
-安装
----
+安装utx
+-----
 ```python
 python setup.py install
 ```
 
-功能
----
+更新utx
+-----
+
+```python
+pip uninstall utx   # 需要先卸载旧的utx
+python setup.py install
+```
+
+
+
+功能列表
+----
 
 - 用例排序，只需要导入utx库，用例的执行顺序就会和编写顺序一致
 
@@ -48,7 +58,8 @@ if __name__ == '__main__':
     # setting.run_case = {Tag.SMOKE, Tag.SP}   # 只运行标记为SMOKE和SP的用例
 
     runner = TestRunner()
-    runner.run_test(r"testcase")
+    runner.add_case_dir(r"testcase")
+    runner.run_test(report_title='接口自动化测试报告')
 ```
 
 - 数据驱动
@@ -71,17 +82,17 @@ class TestLegion(unittest.TestCase):
 
 - 检测用例是否编写了用例描述
 ```python
-2017-11-03 12:00:19,334 WARNING legion.test_legion.test_bless没有用例描述
+2017-11-13 12:00:19,334 WARNING legion.test_legion.test_bless没有用例描述
 ```
 
 - 执行测试时，显示测试进度
 ```python
-2017-11-03 12:00:19,336 INFO 开始进行测试
-2017-11-03 12:00:19,436 INFO Start to test legion.test_legion.test_create_legion (1/5)
-2017-11-03 12:00:19,536 INFO Start to test legion.test_legion.test_receive_bless_box (2/5)
-2017-11-03 12:00:19,637 INFO Start to test legion.test_legion.test_receive_bless_box (3/5)
-2017-11-03 12:00:19,737 INFO Start to test legion.test_legion.test_receive_bless_box (4/5)
-2017-11-03 12:00:19,837 INFO Start to test legion.test_legion.test_quit_legion (5/5)
+2017-11-13 12:00:19,336 INFO 开始进行测试
+2017-11-13 12:00:19,436 INFO Start to test legion.test_legion.test_create_legion (1/5)
+2017-11-13 12:00:19,536 INFO Start to test legion.test_legion.test_receive_bless_box (2/5)
+2017-11-13 12:00:19,637 INFO Start to test legion.test_legion.test_receive_bless_box (3/5)
+2017-11-13 12:00:19,737 INFO Start to test legion.test_legion.test_receive_bless_box (4/5)
+2017-11-13 12:00:19,837 INFO Start to test legion.test_legion.test_quit_legion (5/5)
 ```
 
 - 集成 [ztest](https://github.com/zhangfei19841004/ztest) 和 [BSTestRunner](https://github.com/easonhan007/HTMLTestRunner) 自动生成两份测试报告，感谢两位作者的测试报告模版~
@@ -100,7 +111,7 @@ class TestLegion(unittest.TestCase):
 
 demo目录下，有两个例子：
 
-- run.py，体验utx的完整功能~
+- run.py，使用utx的完整功能
 
 - just_use_report.py 单独使用测试报告组件，不需要utx的其他扩展功能
 

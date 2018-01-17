@@ -454,13 +454,15 @@ class _TestResult(unittest.TestResult):
         output = self.complete_output()
         self.result.append((1, test, output, _exc_str, self._case_run_time))
         log.error('TestCase Failed')
+        if setting.show_error_traceback:
+            log.error(_exc_str)
 
 
 class BSTestRunner(Template_mixin):
-    def __init__(self, title, report_dir, verbosity=1, description=""):
+    def __init__(self, report_title, report_dir, verbosity=1, description=""):
         self.report_dir = report_dir
         self.verbosity = verbosity
-        self.title = title
+        self.title = report_title
         self.description = description
         self.start_time = datetime.datetime.now()
         self.stop_time = None
@@ -612,12 +614,14 @@ class BSTestRunner(Template_mixin):
         has_output = bool(o or e)
         if n == 0:
             case_tr_id = "pt{}.{}".format(class_id + 1, case_id + 1)
-        if n == 1:
+        elif n == 1:
             case_tr_id = "ft{}.{}".format(class_id + 1, case_id + 1)
-        if n == 2:
+        elif n == 2:
             case_tr_id = "ft{}.{}".format(class_id + 1, case_id + 1)
-        if n == 3:
+        elif n == 3:
             case_tr_id = "st{}.{}".format(class_id + 1, case_id + 1)
+        else:
+            case_tr_id = ""
         name = t.id().split('.')[-1]
         doc = t.shortDescription() or ""
         desc = doc and ('%s: %s' % (name, doc)) or name

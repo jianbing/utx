@@ -10,7 +10,8 @@ if __name__ == '__main__':
     # setting.check_case_doc = False  # 关闭检测是否编写了测试用例描述
     setting.full_case_name = True
     setting.max_case_name_len = 80  # 测试报告内，显示用例名字的最大程度
-    setting.show_error_traceback = False  # 执行用例的时候，显示报错信息
+    setting.show_error_traceback = True  # 执行用例的时候，显示报错信息
 
     runner = TestRunner()
-    runner.run_test(r"testcase")
+    runner.add_case_dir(r"testcase")
+    runner.run_test(report_title='接口自动化测试报告')

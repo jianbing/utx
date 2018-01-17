@@ -69,7 +69,7 @@ def data(*values, unpack=True):
 
 
 def tag(*tag_type):
-    """指定测试用例的标签，可以作为测试用例分组使用，用例默认会有Tag.FULL标签，支持同时设定多个表情，如：
+    """指定测试用例的标签，可以作为测试用例分组使用，用例默认会有Tag.FULL标签，支持同时设定多个标签，如：
     @tag(Tag.SP, Tag.FULL)
     def test_func(self):
         pass
@@ -124,7 +124,7 @@ class Tool:
         return func_name
 
     @staticmethod
-    def make_case_from_case_data(raw_func_name, raw_func):
+    def create_case_with_case_data(raw_func_name, raw_func):
         result = dict()
         for index, test_data in enumerate(getattr(raw_func, CASE_DATA_FLAG), 1):
             case_id = Tool.general_case_id()
@@ -154,7 +154,7 @@ class Tool:
         return result
 
     @staticmethod
-    def make_simple_case(raw_func_name, raw_func):
+    def create_case_without_case_data(raw_func_name, raw_func):
         result = dict()
         case_id = Tool.general_case_id()
         setattr(raw_func, CASE_ID_FLAG, case_id)
@@ -211,9 +211,9 @@ class Meta(type):
 
             # 注入测试数据
             if hasattr(raw_case, CASE_DATA_FLAG):
-                funcs.update(Tool.make_case_from_case_data(raw_case_name, raw_case))
+                funcs.update(Tool.create_case_with_case_data(raw_case_name, raw_case))
             else:
-                funcs.update(Tool.make_simple_case(raw_case_name, raw_case))
+                funcs.update(Tool.create_case_without_case_data(raw_case_name, raw_case))
 
         return super(Meta, S).__new__(S, *(more[0], more[1], funcs))
 
