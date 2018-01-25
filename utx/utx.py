@@ -53,6 +53,12 @@ def data(*values, unpack=True):
         print(bless_type)
         print(award)
 
+    3. 是否对测试数据进行解包
+    @data({"gold": 1000, "diamond": 100}, {"gold": 2000, "diamond": 200}, unpack=False)
+    def test_get_battle_reward(self, reward):
+        print(reward)
+        print("获得的钻石数量是：{}".format(reward['diamond']))
+
     :param values:测试数据
     :param unpack: 是否解包
     :return:

@@ -27,7 +27,7 @@ python setup.py install
 
 - 用例排序，只需要导入utx库，用例的执行顺序就会和编写顺序一致
 
-- 用例自定义标签，在 case_tag.py 里边添加标签，可以对测试用例指定多标签
+- 用例自定义标签，在 case_tag.py 里边添加标签，可以对测试用例指定多个标签。目前全部用例默认带有`FULL`标签，未指定标签的用例，默认带有`SMOKE`和`FULL`两个标签。
 
 ```python
 @unique
@@ -45,6 +45,15 @@ class TestLegion(unittest.TestCase):
     @tag(Tag.SMOKE)
     def test_create_legion(self):
         pass
+
+    @tag(Tag.SP, Tag.FULL)
+    def test_quit_legion(self):
+        """退出军团
+
+        :return:
+        """
+        print("吧啦啦啦啦啦啦")
+        assert 1 == 2
 ```
 
 - 运行指定标签的测试用例
@@ -78,7 +87,19 @@ class TestLegion(unittest.TestCase):
         :return:
         """
         print(box_id)
-```
+
+# 默认会解包测试数据来一一对应函数参数，可以使用unpack=False，不进行解包
+
+class TestBattle(unittest.TestCase):
+    @data({"gold": 1000, "diamond": 100}, {"gold": 2000, "diamond": 200}, unpack=False)
+    def test_get_battle_reward(self, reward):
+        """ 领取战斗奖励
+
+        :return:
+        """
+        print(reward)
+        print("获得的钻石数量是：{}".format(reward['diamond']))
+ ```
 
 - 检测用例是否编写了用例描述
 ```python
@@ -128,7 +149,7 @@ class setting:
 ```
 
 
-- 集成 [ztest](https://github.com/zhangfei19841004/ztest) 和 [BSTestRunner](https://github.com/easonhan007/HTMLTestRunner) 自动生成两份测试报告，感谢两位作者的测试报告模版~
+- 集成 [ztest](https://github.com/zhangfei19841004/ztest) 和 [BSTestRunner](https://github.com/easonhan007/HTMLTestRunner) 自动生成两份测试报告，感谢两位作者的测试报告模版
 
 > ztest风格
 

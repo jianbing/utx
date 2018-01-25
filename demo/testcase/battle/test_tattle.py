@@ -20,6 +20,7 @@ class TestBattle(unittest.TestCase):
         """
         print("over")
 
+    @tag(Tag.SP)
     def test_normal_attack(self):
         """测试普通攻击
 
