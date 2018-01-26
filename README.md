@@ -165,7 +165,7 @@ class setting:
 
 demo目录下，有几个例子：
 
-- ```run.py```  使用utx的完整功能
+- ```run.py```  一个完整使用utx功能的demo小项目
 
 - ```just_use_report.py``` 单独使用测试报告组件，不需要utx的其他扩展功能
 
