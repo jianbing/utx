@@ -3,7 +3,7 @@
 """
 Created by jianbing on 2017-11-04
 """
-from utx.case_tag import Tag
+from utx.tag import Tag
 
 
 class setting:

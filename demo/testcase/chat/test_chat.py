@@ -2,6 +2,7 @@
 # -*- coding: UTF-8 -*-
 
 import unittest
+import utx
 
 
 class TestChat(unittest.TestCase):
@@ -19,3 +20,11 @@ class TestChat(unittest.TestCase):
         :return:
         """
         print("私聊")
+
+    @utx.skip("跳过了跳过了")
+    def test_chat_in_union_channel(self):
+        """测试公会聊天
+
+        :return:
+        """
+        print("公会聊天")

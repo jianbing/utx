@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: UTF-8 -*-
-
-from utx.utx import *
-from utx.runner import TestRunner
+from utx.tag import Tag
 from utx import log
+from utx.setting import setting
+from utx.core import *
+from utx.runner import TestRunner

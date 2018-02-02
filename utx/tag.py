@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: UTF-8 -*-
 """
-Created by jianbing on 2017-11-03
+测试用例标签类
 """
 
 from enum import Enum, unique

@@ -6,9 +6,9 @@ Created by jianbing on 2017-10-30
 import functools
 import time
 import unittest
-from utx.setting import setting
+from .setting import setting
 from . import log
-from .case_tag import Tag
+from .tag import Tag
 
 CASE_TAG_FLAG = "__case_tag__"
 CASE_DATA_FLAG = "__case_data__"
@@ -18,7 +18,7 @@ CASE_INFO_FLAG = "__case_info__"
 CASE_SKIP_FLAG = "__unittest_skip__"
 CASE_SKIP_REASON_FLAG = "__unittest_skip_why__"
 
-__all__ = ["data", "skip", "stop_patch", "Tag", "tag", "setting"]
+__all__ = ["skip", "skip_if", "data", "tag", "stop_patch"]
 
 
 def skip(reason):
