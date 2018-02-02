@@ -36,3 +36,4 @@ class TestBattle(unittest.TestCase):
         """
         print(reward)
         print("获得的钻石数量是：{}".format(reward['diamond']))
+        log.debug("获得的钻石数量是：{}".format(reward['diamond']))

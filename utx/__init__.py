@@ -3,3 +3,4 @@
 
 from utx.utx import *
 from utx.runner import TestRunner
+from utx import log

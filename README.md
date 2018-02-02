@@ -106,6 +106,21 @@ class TestBattle(unittest.TestCase):
 2017-11-13 12:00:19,334 WARNING legion.test_legion.test_bless没有用例描述
 ```
 
+- 采集测试用例的print打印的信息到测试报告里边
+```python
+@data({"gold": 1000, "diamond": 100}, {"gold": 2000, "diamond": 200}, unpack=False)
+def test_get_battle_reward(self, reward):
+    """ 领取战斗奖励
+
+    :return:
+    """
+    print(reward)
+    print("获得的钻石数量是：{}".format(reward['diamond']))
+```
+
+![](https://github.com/jianbing/utx/raw/master/img/print_info.png)
+
+
 - 执行测试时，显示测试进度
 ```python
 2017-11-13 12:00:19,336 INFO 开始进行测试

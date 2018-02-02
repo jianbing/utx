@@ -143,12 +143,6 @@ class Tool:
     def create_case_with_case_data(raw_func_name, raw_func):
         result = dict()
         for index, test_data in enumerate(getattr(raw_func, CASE_DATA_FLAG), 1):
-            # case_id = Tool.general_case_id()
-            # setattr(raw_func, CASE_ID_FLAG, case_id)
-            # if setting.sort_case:
-            #     func_name = raw_func_name.replace("test_", "test_{:05d}_".format(case_id))
-            # else:
-            #     func_name = raw_func_name
             func_name = Tool.modify_raw_func_name_to_sort_case(raw_func_name, raw_func)
 
             if isinstance(test_data, list):
@@ -176,12 +170,6 @@ class Tool:
     @staticmethod
     def create_case_without_case_data(raw_func_name, raw_func):
         result = dict()
-        # case_id = Tool.general_case_id()
-        # setattr(raw_func, CASE_ID_FLAG, case_id)
-        # if setting.sort_case:
-        #     func_name = raw_func_name.replace("test_", "test_{:05d}_".format(case_id))
-        # else:
-        #     func_name = raw_func_name
         func_name = Tool.modify_raw_func_name_to_sort_case(raw_func_name, raw_func)
         if len(func_name) > setting.max_case_name_len:
             func_name = func_name[:setting.max_case_name_len] + "……"
@@ -198,7 +186,6 @@ class Tool:
             else:
                 funcs[i] = funcs_dict[i]
 
-        # return funcs, sorted(cases.items(), key=lambda x: x[-1].__code__.co_firstlineno)
         return funcs, cases.items()
 
 

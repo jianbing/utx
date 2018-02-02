@@ -8,7 +8,7 @@ import logging.handlers
 from colorama import Fore, Style
 
 _logger = logging.getLogger('utx_logger')
-_logger.setLevel(logging.INFO)
+_logger.setLevel(logging.DEBUG)
 _logger_handler = logging.StreamHandler(sys.stdout)
 _logger_handler.setFormatter(logging.Formatter('%(asctime)s %(message)s'))
 _logger.addHandler(_logger_handler)
@@ -28,3 +28,12 @@ def error(msg):
 
 def warn(msg):
     _logger.warning(Fore.YELLOW + "WARNING " + str(msg) + Style.RESET_ALL)
+
+
+def set_level(level):
+    """ 设置log级别
+
+    :param level: logging.DEBUG, logging.INFO, logging.WARN, logging.ERROR
+    :return:
+    """
+    _logger.setLevel(level)
