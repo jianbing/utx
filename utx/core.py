@@ -201,9 +201,8 @@ def _feed_data(*args, **kwargs):
 
 
 class Meta(type):
-    @staticmethod
-    def __new__(S, *more):
-        funcs, cases = Tool.filter_test_case(more[-1])
+    def __new__(cls, clsname, bases, attrs):
+        funcs, cases = Tool.filter_test_case(attrs)
         for raw_case_name, raw_case in cases:
             if not hasattr(raw_case, CASE_TAG_FLAG):
                 setattr(raw_case, CASE_TAG_FLAG, {Tag.SMOKE, Tag.FULL})  # 没有指定tag的用例，默认有SMOKE和FULL标记
@@ -226,7 +225,7 @@ class Meta(type):
             else:
                 funcs.update(Tool.create_case_without_case_data(raw_case_name, raw_case))
 
-        return super(Meta, S).__new__(S, *(more[0], more[1], funcs))
+        return super(Meta, cls).__new__(cls, clsname, bases, funcs)
 
 
 class _TestCase(unittest.TestCase, metaclass=Meta):

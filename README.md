@@ -1,7 +1,7 @@
 utx
 ---
 
-> 支持Python3.5及以上版本
+> 支持Python3.6及以上版本
 
 utx扩展了Python unittest框架的功能，起因是需要控制测试用例的执行顺序，而unittest的默认执行顺序是按照用例函数的名称进行排序，所以想要做一个可以无缝接入unittest的扩展功能库。
 
