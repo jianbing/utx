@@ -7,11 +7,11 @@ import sys
 import logging.handlers
 from colorama import Fore, Style
 
-_logger = logging.getLogger('utx_logger')
+_logger = logging.getLogger('utx')
 _logger.setLevel(logging.DEBUG)
-_logger_handler = logging.StreamHandler(sys.stdout)
-_logger_handler.setFormatter(logging.Formatter('%(asctime)s %(message)s'))
-_logger.addHandler(_logger_handler)
+_handler = logging.StreamHandler(sys.stdout)
+_handler.setFormatter(logging.Formatter('%(asctime)s %(message)s'))
+_logger.addHandler(_handler)
 
 
 def debug(msg):
@@ -37,3 +37,19 @@ def set_level(level):
     :return:
     """
     _logger.setLevel(level)
+
+
+def set_level_to_debug():
+    _logger.setLevel(logging.DEBUG)
+
+
+def set_level_to_info():
+    _logger.setLevel(logging.INFO)
+
+
+def set_level_to_warn():
+    _logger.setLevel(logging.WARN)
+
+
+def set_level_to_error():
+    _logger.setLevel(logging.ERROR)

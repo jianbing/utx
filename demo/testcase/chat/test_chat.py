@@ -11,20 +11,20 @@ class TestChat(unittest.TestCase):
 
         :return:
         """
-        print("进行聊天")
+        print("测试世界聊天")
 
-    @unittest.skip("就是跳过了")
+    @unittest.skip("跳过此用例")
     def test_chat_in_personal_channel(self):
         """测试私聊
 
         :return:
         """
-        print("私聊")
+        print("测试私聊")
 
-    @utx.skip("跳过了跳过了")
+    @utx.skip("跳过此用例")
     def test_chat_in_union_channel(self):
         """测试公会聊天
 
         :return:
         """
-        print("公会聊天")
+        print("测试公会聊天")

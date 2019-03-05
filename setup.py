@@ -12,7 +12,7 @@ DESCRIPTION = '对Python unittest的功能进行了扩展'
 URL = 'https://github.com/jianbing/utx'
 EMAIL = '326333381@qq.com'
 AUTHOR = 'jianbing'
-
+VERSION = '0.0.3'
 REQUIRED = [
     'colorama'
 ]
@@ -21,10 +21,6 @@ here = os.path.abspath(os.path.dirname(__file__))
 
 with io.open(os.path.join(here, 'README.md'), encoding='utf-8') as f:
     long_description = '\n' + f.read()
-
-about = {}
-with open(os.path.join(here, NAME, '__version__.py')) as f:
-    exec(f.read(), about)
 
 
 class UploadCommand(Command):
@@ -62,25 +58,23 @@ class UploadCommand(Command):
 
 setup(
     name=NAME,
-    version=about['__version__'],
+    version=VERSION,
     description=DESCRIPTION,
     long_description=long_description,
     author=AUTHOR,
     author_email=EMAIL,
     url=URL,
-    packages=find_packages(include=("utx",)),
-
-    # entry_points={
-    #     'console_scripts': ['mycli=mymodule:cli'],
-    # },
+    python_requires='>=3.6.0',
+    packages=['utx'],
     install_requires=REQUIRED,
     include_package_data=True,
     license='MIT',
     classifiers=[
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: Implementation :: CPython',
     ],
     cmdclass={

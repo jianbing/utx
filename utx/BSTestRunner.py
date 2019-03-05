@@ -212,27 +212,34 @@ function showOutput(id, name) {
     STYLESHEET_TMPL = """
 <style type="text/css" media="screen">
 
-.btn-sg-pass {
-  color: #333; 
-  background-color: #fff;
-  border-color: #ccc;
-  font-size: 15px;
-}
-
-.btn-sg-fail {
-  color: #fff;
-  background-color: #d9534f;
-  border-color: #ccc;
-  font-size: 15px;
-}
-
-.main_container{
-    width: 1500px;
-    padding-right: 15px;
-    padding-left: 15px;
-    margin-right: auto;
-    margin-left: auto;
-}
+    .btn-sg-pass {
+      color: #333; 
+      background-color: #fff;
+      border-color: #ccc;
+      font-size: 15px;
+    }
+    
+    .btn-sg-fail {
+      color: #fff;
+      background-color: #d9534f;
+      border-color: #ccc;
+      font-size: 15px;
+    }
+    
+    .main_container{
+        width: 1500px;
+        padding-right: 15px;
+        padding-left: 15px;
+        margin-right: auto;
+        margin-left: auto;
+    }
+    pre {
+        white-space: pre-wrap;
+        white-space: -moz-pre-wrap;
+        white-space: -pre-wrap;
+        white-space: -o-pre-wrap;
+        word-wrap: break-word;
+    }
 
 /* -- css div popup ------------------------------------------------------------------------ */
 .popup_window {
@@ -535,7 +542,8 @@ class BSTestRunner(Template_mixin):
             heading=heading,
             report=report)
         if setting.create_bstest_style_report:
-            with open(os.path.join(self.report_dir, "{}-bstest.html".format(self.start_time.strftime("%Y-%m-%d-%H-%M-%S"))),
+            with open(os.path.join(self.report_dir,
+                                   "{}-bstest.html".format(self.start_time.strftime("%Y-%m-%d-%H-%M-%S"))),
                       "wb") as f:
                 f.write(output.encode('utf8'))
 

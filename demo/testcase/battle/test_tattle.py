@@ -7,18 +7,18 @@ from utx import *
 
 class TestBattle(unittest.TestCase):
     def test_start_battle(self):
-        """测试战斗
+        """测试开始战斗
 
         :return:
         """
-        print("start battle")
+        print("测试开始战斗")
 
     def test_skill_buff(self):
         """测试技能buff
 
         :return:
         """
-        print("over")
+        print("测试技能buff")
 
     @tag(Tag.SP)
     def test_normal_attack(self):
@@ -26,14 +26,14 @@ class TestBattle(unittest.TestCase):
 
         :return:
         """
-        print("normal attack")
+        print("测试普通攻击")
 
     @data({"gold": 1000, "diamond": 100}, {"gold": 2000, "diamond": 200}, unpack=False)
     def test_get_battle_reward(self, reward):
-        """ 领取战斗奖励
+        """ 测试领取战斗奖励
 
         :return:
         """
         print(reward)
-        print("获得的钻石数量是：{}".format(reward['diamond']))
-        log.debug("获得的钻石数量是：{}".format(reward['diamond']))
+        print("测试领取战斗奖励，获得的钻石数量是：{}".format(reward['diamond']))
+        log.debug("测试领取战斗奖励，获得的钻石数量是：{}".format(reward['diamond']))
