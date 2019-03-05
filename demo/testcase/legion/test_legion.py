@@ -19,7 +19,7 @@ class TestLegion(unittest.TestCase):
         :return:
         """
 
-    @tag(Tag.FULL)
+    @tag(Tag.ALL)
     @data(["gold", 100], ["diamond", 500])
     def test_bless(self, bless_type, cost):
         """测试公会祈福
@@ -40,7 +40,7 @@ class TestLegion(unittest.TestCase):
         """
         print(box_id)
 
-    @tag(Tag.SP, Tag.FULL)
+    @tag(Tag.V1_0_0, Tag.ALL)
     def test_quit_legion(self):
         """测试退出军团
 

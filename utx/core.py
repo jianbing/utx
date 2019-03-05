@@ -1,8 +1,5 @@
 #! /usr/bin/env python
 # -*- coding: UTF-8 -*-
-"""
-Created by jianbing on 2017-10-30
-"""
 import functools
 import time
 import unittest
@@ -15,6 +12,7 @@ CASE_DATA_FLAG = "__case_data__"
 CASE_DATA_UNPACK_FLAG = "__case_data_unpack__"
 CASE_ID_FLAG = "__case_id__"
 CASE_INFO_FLAG = "__case_info__"
+CASE_RUN_INDEX_FlAG = "__case_run_index_flag__"
 CASE_SKIP_FLAG = "__unittest_skip__"
 CASE_SKIP_REASON_FLAG = "__unittest_skip_why__"
 
@@ -22,11 +20,6 @@ __all__ = ["skip", "skip_if", "data", "tag", "stop_patch"]
 
 
 def skip(reason):
-    # def wrap(func):
-    #     setattr(func, CASE_SKIP_FLAG, True)
-    #     setattr(func, CASE_SKIP_REASON_FLAG, reason)
-    #     return func
-    # return wrap
     def wrap(func):
         return unittest.skip(reason)(func)
 
@@ -86,7 +79,7 @@ def tag(*tag_type):
 
     def wrap(func):
         if not hasattr(func, CASE_TAG_FLAG):
-            tags = {Tag.FULL}
+            tags = {Tag.ALL}
             tags.update(tag_type)
             setattr(func, CASE_TAG_FLAG, tags)
         else:
@@ -101,8 +94,8 @@ def _handler(func):
     def wrap(*args, **kwargs):
         time.sleep(setting.execute_interval)
         msg = "start to test {} ({}/{})".format(getattr(func, CASE_INFO_FLAG),
-                                                getattr(func, CASE_ID_FLAG),
-                                                Tool.total_case_num)
+                                                getattr(func, CASE_RUN_INDEX_FlAG),
+                                                Tool.actual_case_num)
         log.info(msg)
         result = func(*args, **kwargs)
         return result
@@ -111,21 +104,32 @@ def _handler(func):
 
 
 class Tool:
+    actual_case_num = 0
     total_case_num = 0
 
     @classmethod
-    def general_case_id(cls):
+    def create_case_id(cls):
         cls.total_case_num += 1
         return cls.total_case_num
 
+    @classmethod
+    def create_actual_run_index(cls):
+        cls.actual_case_num += 1
+        return cls.actual_case_num
+
     @staticmethod
-    def modify_raw_func_name_to_sort_case(raw_func_name, raw_func):
-        case_id = Tool.general_case_id()
-        setattr(raw_func, CASE_ID_FLAG, case_id)
+    def modify_func_name(func):
+        """修改函数名字，实现排序 eg test_fight ---> test_00001_fight
+
+        :param func:
+        :return:
+        """
+        case_id = Tool.create_case_id()
+        setattr(func, CASE_ID_FLAG, case_id)
         if setting.sort_case:
-            func_name = raw_func_name.replace("test_", "test_{:05d}_".format(case_id))
+            func_name = func.__name__.replace("test_", "test_{:05d}_".format(case_id))
         else:
-            func_name = raw_func_name
+            func_name = func.__name__
         return func_name
 
     @staticmethod
@@ -140,40 +144,46 @@ class Tool:
         return func_name
 
     @staticmethod
-    def create_case_with_case_data(raw_func_name, raw_func):
+    def create_case_with_case_data(func):
         result = dict()
-        for index, test_data in enumerate(getattr(raw_func, CASE_DATA_FLAG), 1):
-            func_name = Tool.modify_raw_func_name_to_sort_case(raw_func_name, raw_func)
+        for index, test_data in enumerate(getattr(func, CASE_DATA_FLAG), 1):
+            if not hasattr(func, CASE_SKIP_FLAG):
+                setattr(func, CASE_RUN_INDEX_FlAG, Tool.create_actual_run_index())
 
+            func_name = Tool.modify_func_name(func)
             if isinstance(test_data, list):
                 func_name = Tool.general_case_name_with_test_data(func_name, index, test_data)
-                if getattr(raw_func, CASE_DATA_UNPACK_FLAG, None):
-                    result[func_name] = _handler(_feed_data(*test_data)(raw_func))
+                if getattr(func, CASE_DATA_UNPACK_FLAG, None):
+                    result[func_name] = _handler(_feed_data(*test_data)(func))
                 else:
-                    result[func_name] = _handler(_feed_data(test_data)(raw_func))
+                    result[func_name] = _handler(_feed_data(test_data)(func))
 
             elif isinstance(test_data, dict):
                 func_name = Tool.general_case_name_with_test_data(func_name, index, test_data.values())
-                if getattr(raw_func, CASE_DATA_UNPACK_FLAG, None):
-                    result[func_name] = _handler(_feed_data(**test_data)(raw_func))
+                if getattr(func, CASE_DATA_UNPACK_FLAG, None):
+                    result[func_name] = _handler(_feed_data(**test_data)(func))
                 else:
-                    result[func_name] = _handler(_feed_data(test_data)(raw_func))
+                    result[func_name] = _handler(_feed_data(test_data)(func))
 
             elif isinstance(test_data, (int, str, bool, float)):
                 func_name = Tool.general_case_name_with_test_data(func_name, index, [test_data])
-                result[func_name] = _handler(_feed_data(test_data)(raw_func))
+                result[func_name] = _handler(_feed_data(test_data)(func))
 
             else:
                 raise Exception("无法解析{}".format(test_data))
+
         return result
 
     @staticmethod
-    def create_case_without_case_data(raw_func_name, raw_func):
+    def create_case_without_case_data(func):
+        if not hasattr(func, CASE_SKIP_FLAG):
+            setattr(func, CASE_RUN_INDEX_FlAG, Tool.create_actual_run_index())
+
         result = dict()
-        func_name = Tool.modify_raw_func_name_to_sort_case(raw_func_name, raw_func)
+        func_name = Tool.modify_func_name(func)
         if len(func_name) > setting.max_case_name_len:
             func_name = func_name[:setting.max_case_name_len] + "……"
-        result[func_name] = _handler(raw_func)
+        result[func_name] = _handler(func)
         return result
 
     @staticmethod
@@ -205,7 +215,7 @@ class Meta(type):
         funcs, cases = Tool.filter_test_case(attrs)
         for raw_case_name, raw_case in cases:
             if not hasattr(raw_case, CASE_TAG_FLAG):
-                setattr(raw_case, CASE_TAG_FLAG, {Tag.SMOKE, Tag.FULL})  # 没有指定tag的用例，默认有SMOKE和FULL标记
+                setattr(raw_case, CASE_TAG_FLAG, {Tag.SMOKE, Tag.ALL})  # 没有指定tag的用例，默认有SMOKE和FULL标记
 
             # 注入用例信息
             case_info = "{}.{}".format(raw_case.__module__, raw_case.__name__)
@@ -221,9 +231,9 @@ class Meta(type):
 
             # 注入测试数据
             if hasattr(raw_case, CASE_DATA_FLAG):
-                funcs.update(Tool.create_case_with_case_data(raw_case_name, raw_case))
+                funcs.update(Tool.create_case_with_case_data(raw_case))
             else:
-                funcs.update(Tool.create_case_without_case_data(raw_case_name, raw_case))
+                funcs.update(Tool.create_case_without_case_data(raw_case))
 
         return super(Meta, cls).__new__(cls, clsname, bases, funcs)
 
@@ -239,9 +249,9 @@ class _TestCase(unittest.TestCase, metaclass=Meta):
         return doc
 
 
-raw_unittest_testcase = unittest.TestCase
+TestCaseBackup = unittest.TestCase
 unittest.TestCase = _TestCase
 
 
 def stop_patch():
-    unittest.TestCase = raw_unittest_testcase
+    unittest.TestCase = TestCaseBackup

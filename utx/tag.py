@@ -7,10 +7,17 @@
 from enum import Enum, unique
 
 
+class NewTag:
+    def __init__(self, desc=""):
+        self.desc = desc
+
+
 @unique
 class Tag(Enum):
-    SMOKE = 1  # 冒烟测试标记，可以重命名，但是不要删除
-    FULL = 1000  # 完整测试标记，可以重命名，但是不要删除
+    SMOKE = NewTag("冒烟")  # 冒烟测试标记，可以重命名，不要删除
+    ALL = NewTag("完整")  # 完整测试标记，可以重命名，不要删除
 
     # 以下开始为扩展标签，自行调整
-    SP = 2
+    V1_0_0 = NewTag("V1.0.0版本")
+    V2_0_0 = NewTag("V2.0.0版本")
+

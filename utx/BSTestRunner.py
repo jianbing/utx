@@ -32,15 +32,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 import json
 import shutil
 import time
-
 import os
-
-from . import log, setting
-import datetime
 import io
+import datetime
 import sys
 import unittest
 from xml.sax import saxutils
+from utx.core import Tool
+from . import log, setting
 
 __author__ = "Wai Yip Tung && Eason Han"
 __version__ = "0.8.4"
@@ -201,13 +200,6 @@ function showOutput(id, name) {
 </body>
 </html>
 """
-    # variables: (title, generator, stylesheet, heading, report, ending)
-
-    # ------------------------------------------------------------------------
-    # Stylesheet
-    #
-    # alternatively use a <link> for external style sheet, e.g.
-    #   <link rel="stylesheet" href="$url" type="text/css">
 
     STYLESHEET_TMPL = """
 <style type="text/css" media="screen">
@@ -475,7 +467,10 @@ class BSTestRunner(Template_mixin):
         self.stop_time = None
 
     def run(self, test):
-        log.info("开始进行测试")
+        msg = "开始测试，用例数量总共{}个，跳过{}个，实际运行{}个"
+        log.info(msg.format(Tool.total_case_num,
+                            Tool.total_case_num - Tool.actual_case_num,
+                            Tool.actual_case_num))
         result = _TestResult(self.verbosity)
         test(result)
         self.stop_time = datetime.datetime.now()

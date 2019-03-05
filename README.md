@@ -37,11 +37,12 @@ python setup.py install
 ```python
 @unique
 class Tag(Enum):
-    SMOKE = 1  # 冒烟测试标记，可以重命名，但是不要删除
-    FULL = 1000  # 完整测试标记，可以重命名，但是不要删除
+    SMOKE = NewTag("冒烟")  # 冒烟测试标记，可以重命名，不要删除
+    ALL = NewTag("完整")  # 完整测试标记，可以重命名，不要删除
 
     # 以下开始为扩展标签，自行调整
-    SP = 2
+    V1_0_0 = NewTag("V1.0.0版本")
+    V2_0_0 = NewTag("V2.0.0版本")
 ```
 
 ```python
@@ -51,13 +52,13 @@ class TestLegion(unittest.TestCase):
     def test_create_legion(self):
         pass
 
-    @tag(Tag.SP, Tag.FULL)
+    @tag(Tag.V1_0_0, Tag.ALL)
     def test_quit_legion(self):
-        """退出军团
+        """测试退出军团
 
         :return:
         """
-        print("吧啦啦啦啦啦啦")
+        print("测试退出军团")
         assert 1 == 2
 ```
 
@@ -67,9 +68,9 @@ class TestLegion(unittest.TestCase):
 from utx import *
 
 if __name__ == '__main__':
-    setting.run_case = {Tag.SMOKE}  # 只运行SMOKE冒烟用例
-    # setting.run_case = {Tag.FULL}  # 运行全部测试用例
-    # setting.run_case = {Tag.SMOKE, Tag.SP}   # 只运行标记为SMOKE和SP的用例
+    setting.run_case = {Tag.ALL}  # 运行全部测试用例
+    # setting.run_case = {Tag.SMOKE}  # 只运行SMOKE标记的测试用例
+    # setting.run_case = {Tag.SMOKE, Tag.V1_0_0}   # 只运行SMOKE和V1_0_0标记的测试用例
 
     runner = TestRunner()
     runner.add_case_dir(r"testcase")
@@ -81,13 +82,19 @@ if __name__ == '__main__':
 class TestLegion(unittest.TestCase):
 
     @data(["gold", 100], ["diamond", 500])
-    def test_bless(self, bless_type, award):
+    def test_bless(self, bless_type, cost):
+        """测试公会祈福
+
+        :param bless_type: 祈福类型
+        :param cost: 消耗数量
+        :return:
+        """
         print(bless_type)
-        print(award)
+        print(cost)
         
     @data(10001, 10002, 10003)
     def test_receive_bless_box(self, box_id):
-        """ 领取祈福宝箱
+        """ 测试领取祈福宝箱
 
         :return:
         """
@@ -98,7 +105,7 @@ class TestLegion(unittest.TestCase):
 class TestBattle(unittest.TestCase):
     @data({"gold": 1000, "diamond": 100}, {"gold": 2000, "diamond": 200}, unpack=False)
     def test_get_battle_reward(self, reward):
-        """ 领取战斗奖励
+        """ 测试领取战斗奖励
 
         :return:
         """

@@ -5,9 +5,10 @@ from utx import *
 import logging
 
 if __name__ == '__main__':
-    # setting.run_case = {Tag.FULL}  # 运行全部测试用例
-    setting.run_case = {Tag.SMOKE}  # 只运行SMOKE标记的测试用例
-    # setting.run_case = {Tag.SMOKE, Tag.SP}   # 只运行SMOKE和SP标记的测试用例
+    setting.run_case = {Tag.ALL}  # 运行全部测试用例
+    # setting.run_case = {Tag.SMOKE}  # 只运行SMOKE标记的测试用例
+    # setting.run_case = {Tag.SMOKE, Tag.V1_0_0}   # 只运行SMOKE和V1_0_0标记的测试用例
+
     setting.check_case_doc = False  # 关闭检测是否编写了测试用例描述
     setting.full_case_name = True
     setting.max_case_name_len = 80  # 测试报告内，显示用例名字的最大程度
@@ -16,7 +17,7 @@ if __name__ == '__main__':
     setting.create_bstest_style_report = True  # 生成bstest风格的报告
     setting.create_ztest_style_report = True  # 生成ztest风格的报告
 
-    log.set_level(logging.DEBUG)  # 设置utx的log级别
+    log.set_level(logging.DEBUG)   # 设置utx的log级别
     # log.set_level_to_debug()     # 设置log级别的另外一种方法
 
     runner = TestRunner()

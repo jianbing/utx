@@ -20,7 +20,7 @@ class TestBattle(unittest.TestCase):
         """
         print("测试技能buff")
 
-    @tag(Tag.SP)
+    @tag(Tag.V1_0_0)
     def test_normal_attack(self):
         """测试普通攻击
 
