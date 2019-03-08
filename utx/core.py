@@ -68,8 +68,8 @@ def data(*values, unpack=True):
 
 
 def tag(*tag_type):
-    """指定测试用例的标签，可以作为测试用例分组使用，用例默认会有Tag.FULL标签，支持同时设定多个标签，如：
-    @tag(Tag.SP, Tag.FULL)
+    """指定测试用例的标签，可以作为测试用例分组使用，用例默认会有Tag.ALL标签，支持同时设定多个标签，如：
+    @tag(Tag.V1_0_0, Tag.SMOKE)
     def test_func(self):
         pass
 
@@ -215,7 +215,7 @@ class Meta(type):
         funcs, cases = Tool.filter_test_case(attrs)
         for raw_case_name, raw_case in cases:
             if not hasattr(raw_case, CASE_TAG_FLAG):
-                setattr(raw_case, CASE_TAG_FLAG, {Tag.SMOKE, Tag.ALL})  # 没有指定tag的用例，默认有SMOKE和FULL标记
+                setattr(raw_case, CASE_TAG_FLAG, {Tag.ALL})  # 没有指定tag的用例，默认带有tag：ALL
 
             # 注入用例信息
             case_info = "{}.{}".format(raw_case.__module__, raw_case.__name__)
