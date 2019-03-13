@@ -60,8 +60,9 @@ def data(*values, unpack=True):
     def wrap(func):
         if hasattr(func, CASE_DATA_FLAG):
             log.error("{}的测试数据只能初始化一次".format(func.__name__))
-        setattr(func, CASE_DATA_FLAG, values)
-        setattr(func, CASE_DATA_UNPACK_FLAG, unpack)
+        else:
+            setattr(func, CASE_DATA_FLAG, values)
+            setattr(func, CASE_DATA_UNPACK_FLAG, unpack)
         return func
 
     return wrap
@@ -73,7 +74,7 @@ def tag(*tag_type):
     def test_func(self):
         pass
 
-    :param tag_type:标签类型，在case_tag.py里边自定义
+    :param tag_type:标签类型，在tag.py里边自定义
     :return:
     """
 
@@ -196,7 +197,7 @@ class Tool:
             else:
                 funcs[i] = funcs_dict[i]
 
-        return funcs, cases.items()
+        return funcs, cases
 
 
 def _feed_data(*args, **kwargs):
@@ -213,27 +214,27 @@ def _feed_data(*args, **kwargs):
 class Meta(type):
     def __new__(cls, clsname, bases, attrs):
         funcs, cases = Tool.filter_test_case(attrs)
-        for raw_case_name, raw_case in cases:
-            if not hasattr(raw_case, CASE_TAG_FLAG):
-                setattr(raw_case, CASE_TAG_FLAG, {Tag.ALL})  # 没有指定tag的用例，默认带有tag：ALL
+        for test_case in cases.values():
+            if not hasattr(test_case, CASE_TAG_FLAG):
+                setattr(test_case, CASE_TAG_FLAG, {Tag.ALL})  # 没有指定tag的用例，默认带有tag：ALL
 
             # 注入用例信息
-            case_info = "{}.{}".format(raw_case.__module__, raw_case.__name__)
-            setattr(raw_case, CASE_INFO_FLAG, case_info)
+            case_info = "{}.{}".format(test_case.__module__, test_case.__name__)
+            setattr(test_case, CASE_INFO_FLAG, case_info)
 
             # 检查用例描述
-            if setting.check_case_doc and not raw_case.__doc__:
+            if setting.check_case_doc and not test_case.__doc__:
                 log.warn("{}没有用例描述".format(case_info))
 
             # 过滤不执行的用例
-            if not getattr(raw_case, CASE_TAG_FLAG) & set(setting.run_case):
+            if not getattr(test_case, CASE_TAG_FLAG) & set(setting.run_case):
                 continue
 
             # 注入测试数据
-            if hasattr(raw_case, CASE_DATA_FLAG):
-                funcs.update(Tool.create_case_with_case_data(raw_case))
+            if hasattr(test_case, CASE_DATA_FLAG):
+                funcs.update(Tool.create_case_with_case_data(test_case))
             else:
-                funcs.update(Tool.create_case_without_case_data(raw_case))
+                funcs.update(Tool.create_case_without_case_data(test_case))
 
         return super(Meta, cls).__new__(cls, clsname, bases, funcs)
 

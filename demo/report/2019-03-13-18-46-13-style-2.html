@@ -1,3 +1,4 @@
+
 <html>
 <head>
     <meta charset="utf-8">
@@ -9,6 +10,14 @@
     <link href="https://cdn.bootcss.com/chosen/1.8.2/chosen.css" rel="stylesheet">
     <base target="_blank">
     <style type="text/css">
+        pre {
+            white-space: pre-wrap;
+            white-space: -moz-pre-wrap;
+            white-space: -pre-wrap;
+            white-space: -o-pre-wrap;
+            word-wrap: break-word;
+        }
+
         h1, h2, h3, h4, h5, h6 {
             font-weight: 100
         }
@@ -6984,7 +6993,7 @@
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label text-navy">用例名称:</label>
                                     <div class="col-sm-5">
-                                        <span class="form-control" id="testName"></span>
+                                        <span class="form-control" id="reportName"></span>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -7100,14 +7109,55 @@
 <script src="https://cdn.bootcss.com/echarts/3.8.5/echarts.min.js"></script>
 <script src="https://cdn.bootcss.com/chosen/1.8.2/chosen.jquery.js"></script>
 <script type="text/javascript">
+
+    function $childNode(o) {
+        return window.frames[o]
+    }
+
+    function animationHover(o, e) {
+        o = $(o), o.hover(function () {
+            o.addClass("animated " + e)
+        }, function () {
+            window.setTimeout(function () {
+                o.removeClass("animated " + e)
+            }, 2e3)
+        })
+    }
+
+    function WinMove() {
+        var o = "[class*=col]", e = ".ibox-title", i = "[class*=col]";
+        $(o).sortable({
+            handle: e,
+            connectWith: i,
+            tolerance: "pointer",
+            forcePlaceholderSize: !0,
+            opacity: .8
+        }).disableSelection()
+    }
+
+    var $parentNode = window.parent.document;
+    if ($(".tooltip-demo").tooltip({
+        selector: "[data-toggle=tooltip]",
+        container: "body"
+    }), $(".modal").appendTo("body"), $("[data-toggle=popover]").popover(), $(".collapse-link").click(function () {
+        var o = $(this).closest("div.ibox"), e = $(this).find("i"), i = o.find("div.ibox-content");
+        i.slideToggle(200), e.toggleClass("fa-chevron-up").toggleClass("fa-chevron-down"), o.toggleClass("").toggleClass("border-bottom"), setTimeout(function () {
+            o.resize(), o.find("[id^=map-]").resize()
+        }, 50)
+    }), $(".close-link").click(function () {
+        var o = $(this).closest("div.ibox");
+        o.remove()
+    }), top == this) {
+    }
+
     var resultData = {
     "testResult": [
         {
             "className": "battle.test_tattle.TestBattle",
-            "methodName": "test_00001_fight",
+            "methodName": "test_00001_start_battle",
             "spendTime": "0.1S",
-            "description": "测试战斗",
-            "log": "fight\n",
+            "description": "测试开始战斗",
+            "log": "测试开始战斗\n",
             "status": "成功"
         },
         {
@@ -7115,7 +7165,7 @@
             "methodName": "test_00002_skill_buff",
             "spendTime": "0.1S",
             "description": "测试技能buff",
-            "log": "over\n",
+            "log": "测试技能buff\n",
             "status": "成功"
         },
         {
@@ -7123,23 +7173,23 @@
             "methodName": "test_00003_normal_attack",
             "spendTime": "0.1S",
             "description": "测试普通攻击",
-            "log": "normal attack\n",
+            "log": "测试普通攻击\n",
             "status": "成功"
         },
         {
             "className": "battle.test_tattle.TestBattle",
-            "methodName": "test_00004_hello_world_00001_1000_100",
+            "methodName": "test_00004_get_battle_reward_00001_1000_100",
             "spendTime": "0.1S",
-            "description": "领取战斗奖励",
-            "log": "{'gold': 1000, 'diamond': 100}\n获得的钻石数量是：100\n",
+            "description": "测试领取战斗奖励",
+            "log": "{'gold': 1000, 'diamond': 100}\n测试领取战斗奖励，获得的钻石数量是：100\n",
             "status": "成功"
         },
         {
             "className": "battle.test_tattle.TestBattle",
-            "methodName": "test_00005_hello_world_00002_2000_200",
+            "methodName": "test_00005_get_battle_reward_00002_2000_200",
             "spendTime": "0.1S",
-            "description": "领取战斗奖励",
-            "log": "{'gold': 2000, 'diamond': 200}\n获得的钻石数量是：200\n",
+            "description": "测试领取战斗奖励",
+            "log": "{'gold': 2000, 'diamond': 200}\n测试领取战斗奖励，获得的钻石数量是：200\n",
             "status": "成功"
         },
         {
@@ -7147,74 +7197,96 @@
             "methodName": "test_00006_chat_in_world_channel",
             "spendTime": "0.1S",
             "description": "测试世界聊天",
-            "log": "进行聊天\n",
-            "status": "成功"
+            "log": "测试世界聊天\nTraceback (most recent call last):\n  File \"D:\\github\\utx\\utx\\core.py\", line 101, in wrap\n    result = func(*args, **kwargs)\n  File \"D:\\github\\utx\\demo\\testcase\\chat\\test_chat.py\", line 15, in test_chat_in_world_channel\n    raise Exception(\"运行报错了\")\nException: 运行报错了\n",
+            "status": "错误"
         },
         {
-            "className": "legion.test_legion.TestLegion",
-            "methodName": "test_00007_create_legion",
-            "spendTime": "0.1S",
-            "description": "创建军团",
-            "log": "",
-            "status": "成功"
-        },
-        {
-            "className": "legion.test_legion.TestLegion",
-            "methodName": "test_00008_bless_00001_gold_100",
-            "spendTime": "0.1S",
-            "description": "",
-            "log": "gold\n100\n",
-            "status": "成功"
-        },
-        {
-            "className": "legion.test_legion.TestLegion",
-            "methodName": "test_00009_bless_00002_diamond_500",
-            "spendTime": "0.1S",
-            "description": "",
-            "log": "diamond\n500\n",
-            "status": "成功"
-        },
-        {
-            "className": "legion.test_legion.TestLegion",
-            "methodName": "test_00010_receive_bless_box_00001_10001",
+            "className": "chat.test_chat.TestChat",
+            "methodName": "test_00007_chat_in_personal_channel",
             "spendTime": "0.0S",
-            "description": "领取祈福宝箱",
+            "description": "测试私聊",
+            "log": "",
+            "status": "跳过"
+        },
+        {
+            "className": "chat.test_chat.TestChat",
+            "methodName": "test_00008_chat_in_union_channel",
+            "spendTime": "0.0S",
+            "description": "测试公会聊天",
             "log": "",
             "status": "跳过"
         },
         {
             "className": "legion.test_legion.TestLegion",
-            "methodName": "test_00011_receive_bless_box_00002_10002",
-            "spendTime": "0.0S",
-            "description": "领取祈福宝箱",
-            "log": "",
-            "status": "跳过"
-        },
-        {
-            "className": "legion.test_legion.TestLegion",
-            "methodName": "test_00012_receive_bless_box_00003_10003",
-            "spendTime": "0.0S",
-            "description": "领取祈福宝箱",
-            "log": "",
-            "status": "跳过"
-        },
-        {
-            "className": "legion.test_legion.TestLegion",
-            "methodName": "test_00013_quit_legion",
+            "methodName": "test_00009_create_legion",
             "spendTime": "0.1S",
-            "description": "退出军团",
-            "log": "吧啦啦啦啦啦啦\nTraceback (most recent call last):\n  File \"C:\\github\\github\\utx\\utx\\utx.py\", line 89, in __handler\n    result = func(*args, **kwargs)\n  File \"C:\\github\\github\\utx\\demo\\testcase\\legion\\test_legion.py\", line 38, in test_quit_legion\n    assert 1 == 2\nAssertionError\n",
+            "description": "测试创建军团",
+            "log": "运行setUp方法\n运行tearDown方法\n",
+            "status": "成功"
+        },
+        {
+            "className": "legion.test_legion.TestLegion",
+            "methodName": "test_00010_bless_00001_gold_100",
+            "spendTime": "0.1S",
+            "description": "测试公会祈福",
+            "log": "运行setUp方法\ngold\n100\n运行tearDown方法\n",
+            "status": "成功"
+        },
+        {
+            "className": "legion.test_legion.TestLegion",
+            "methodName": "test_00011_bless_00002_diamond_500",
+            "spendTime": "0.1S",
+            "description": "测试公会祈福",
+            "log": "运行setUp方法\ndiamond\n500\n运行tearDown方法\n",
+            "status": "成功"
+        },
+        {
+            "className": "legion.test_legion.TestLegion",
+            "methodName": "test_00012_receive_bless_box_00001_10001",
+            "spendTime": "0.0S",
+            "description": "测试领取祈福宝箱",
+            "log": "",
+            "status": "跳过"
+        },
+        {
+            "className": "legion.test_legion.TestLegion",
+            "methodName": "test_00013_receive_bless_box_00002_10002",
+            "spendTime": "0.0S",
+            "description": "测试领取祈福宝箱",
+            "log": "",
+            "status": "跳过"
+        },
+        {
+            "className": "legion.test_legion.TestLegion",
+            "methodName": "test_00014_receive_bless_box_00003_10003",
+            "spendTime": "0.0S",
+            "description": "测试领取祈福宝箱",
+            "log": "",
+            "status": "跳过"
+        },
+        {
+            "className": "legion.test_legion.TestLegion",
+            "methodName": "test_00015_quit_legion",
+            "spendTime": "0.1S",
+            "description": "测试退出军团",
+            "log": "运行setUp方法\n测试退出军团\n运行tearDown方法\nTraceback (most recent call last):\n  File \"D:\\github\\utx\\utx\\core.py\", line 101, in wrap\n    result = func(*args, **kwargs)\n  File \"D:\\github\\utx\\demo\\testcase\\legion\\test_legion.py\", line 50, in test_quit_legion\n    assert 1 == 2\nAssertionError\n",
             "status": "失败"
         }
     ],
-    "testName": "接口自动化测试报告",
-    "beginTime": "2017-12-27 16:14:17",
-    "totalTime": "0:00:01.003930",
-    "testPass": 9,
-    "testAll": 13,
+    "reportName": "接口自动化测试报告",
+    "beginTime": "2019-03-13 18:46:13",
+    "totalTime": "0:00:01.003057",
+    "testPass": 8,
+    "testAll": 15,
     "testFail": 1,
-    "testSkip": 3
+    "testSkip": 5,
+    "testError": 1
 };
+
+    function clickRow(obj) {
+        $("#detailBody").children("tr").attr("style", "font-family: Consolas");
+        $(obj).attr("style", "font-family: Consolas; background-color: #b0d877");
+    }
 
     function details(obj) {
         if ($(obj).text() == '展开') {
@@ -7237,7 +7309,7 @@
     }
 
     $(function () {
-        $("#testName").text(resultData["testName"]);
+        $("#reportName").text(resultData["reportName"]);
         $("#testPass").text(resultData["testPass"]);
         $("#testFail").text(resultData["testFail"]);
         $("#testSkip").text(resultData["testSkip"]);

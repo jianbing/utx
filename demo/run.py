@@ -14,10 +14,10 @@ if __name__ == '__main__':
     setting.max_case_name_len = 80  # 测试报告内，显示用例名字的最大程度
     setting.show_error_traceback = True  # 执行用例的时候，显示报错信息
     setting.sort_case = True  # 是否按照编写顺序，对用例进行排序
-    setting.create_bstest_style_report = True  # 生成bstest风格的报告
-    setting.create_ztest_style_report = True  # 生成ztest风格的报告
+    setting.create_report_by_style_1 = True  # 测试报告样式1
+    setting.create_report_by_style_2 = True  # 测试报告样式2
 
-    log.set_level(logging.DEBUG)   # 设置utx的log级别
+    log.set_level(logging.DEBUG)  # 设置utx的log级别
     # log.set_level_to_debug()     # 设置log级别的另外一种方法
 
     runner = TestRunner()

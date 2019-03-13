@@ -12,6 +12,7 @@ class TestChat(unittest.TestCase):
         :return:
         """
         print("测试世界聊天")
+        raise Exception("运行报错了")
 
     @unittest.skip("跳过此用例")
     def test_chat_in_personal_channel(self):

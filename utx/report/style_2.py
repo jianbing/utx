@@ -1,3 +1,6 @@
+#! /usr/bin/env python
+# -*- coding: UTF-8 -*-
+html = r"""
 <html>
 <head>
     <meta charset="utf-8">
@@ -6992,7 +6995,7 @@
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label text-navy">用例名称:</label>
                                     <div class="col-sm-5">
-                                        <span class="form-control" id="testName"></span>
+                                        <span class="form-control" id="reportName"></span>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -7108,7 +7111,53 @@
 <script src="https://cdn.bootcss.com/echarts/3.8.5/echarts.min.js"></script>
 <script src="https://cdn.bootcss.com/chosen/1.8.2/chosen.jquery.js"></script>
 <script type="text/javascript">
+
+    function $childNode(o) {
+        return window.frames[o]
+    }
+
+    function animationHover(o, e) {
+        o = $(o), o.hover(function () {
+            o.addClass("animated " + e)
+        }, function () {
+            window.setTimeout(function () {
+                o.removeClass("animated " + e)
+            }, 2e3)
+        })
+    }
+
+    function WinMove() {
+        var o = "[class*=col]", e = ".ibox-title", i = "[class*=col]";
+        $(o).sortable({
+            handle: e,
+            connectWith: i,
+            tolerance: "pointer",
+            forcePlaceholderSize: !0,
+            opacity: .8
+        }).disableSelection()
+    }
+
+    var $parentNode = window.parent.document;
+    if ($(".tooltip-demo").tooltip({
+        selector: "[data-toggle=tooltip]",
+        container: "body"
+    }), $(".modal").appendTo("body"), $("[data-toggle=popover]").popover(), $(".collapse-link").click(function () {
+        var o = $(this).closest("div.ibox"), e = $(this).find("i"), i = o.find("div.ibox-content");
+        i.slideToggle(200), e.toggleClass("fa-chevron-up").toggleClass("fa-chevron-down"), o.toggleClass("").toggleClass("border-bottom"), setTimeout(function () {
+            o.resize(), o.find("[id^=map-]").resize()
+        }, 50)
+    }), $(".close-link").click(function () {
+        var o = $(this).closest("div.ibox");
+        o.remove()
+    }), top == this) {
+    }
+
     var resultData = ${resultData};
+
+    function clickRow(obj) {
+        $("#detailBody").children("tr").attr("style", "font-family: Consolas");
+        $(obj).attr("style", "font-family: Consolas; background-color: #b0d877");
+    }
 
     function details(obj) {
         if ($(obj).text() == '展开') {
@@ -7131,7 +7180,7 @@
     }
 
     $(function () {
-        $("#testName").text(resultData["testName"]);
+        $("#reportName").text(resultData["reportName"]);
         $("#testPass").text(resultData["testPass"]);
         $("#testFail").text(resultData["testFail"]);
         $("#testSkip").text(resultData["testSkip"]);
@@ -7284,3 +7333,10 @@
 </script>
 </body>
 </html>
+"""
+
+
+def build_report(file_path, data):
+    import json
+    with open(file_path, 'w', encoding='utf-8') as f:
+        f.write(html.replace(r"${resultData}", json.dumps(data, ensure_ascii=False, indent=4)))

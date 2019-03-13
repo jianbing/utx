@@ -7,7 +7,6 @@ from utx.tag import Tag
 
 
 class setting:
-
     # 只运行的用例类型
     run_case = {Tag.SMOKE}
 
@@ -29,8 +28,8 @@ class setting:
     # 执行用例的时候，显示报错信息
     show_error_traceback = True
 
-    # 生成ztest风格的报告
-    create_ztest_style_report = True
+    # 测试报告样式1
+    create_report_by_style_1 = True
 
-    # 生成bstest风格的报告
-    create_bstest_style_report = True
+    # 测试报告样式2
+    create_report_by_style_2 = True

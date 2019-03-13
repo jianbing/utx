@@ -1,24 +1,22 @@
-utx
----
+# utx
 
 > 支持Python3.6及以上版本
 
 utx扩展了Python unittest框架的功能，起因是需要控制测试用例的执行顺序，而unittest的默认执行顺序是按照用例函数的名称进行排序，所以想要做一个可以无缝接入unittest的扩展功能库。
 
-当前版本
------
+## 当前版本
+
 ```python
-V0.0.3
+V0.0.5
 ```
 
-安装utx
------
+## 安装
+
 ```python
 python setup.py install
 ```
 
-更新utx
------
+## 安装
 
 ```python
 pip uninstall utx   # 需要先卸载旧的utx
@@ -27,8 +25,8 @@ python setup.py install
 
 
 
-功能列表
-----
+## 功能列表
+
 
 - 用例排序，只需要导入utx库，用例的执行顺序就会和编写顺序一致
 
@@ -37,8 +35,8 @@ python setup.py install
 ```python
 @unique
 class Tag(Enum):
-    SMOKE = NewTag("冒烟")  # 冒烟测试标记，可以重命名，不要删除
     ALL = NewTag("完整")  # 完整测试标记，可以重命名，不要删除
+    SMOKE = NewTag("冒烟")  # 冒烟测试标记
 
     # 以下开始为扩展标签，自行调整
     V1_0_0 = NewTag("V1.0.0版本")
@@ -135,12 +133,13 @@ def test_get_battle_reward(self, reward):
 
 - 执行测试时，显示测试进度
 ```python
-2017-11-13 12:00:19,336 INFO 开始进行测试
-2017-11-13 12:00:19,436 INFO Start to test legion.test_legion.test_create_legion (1/5)
-2017-11-13 12:00:19,536 INFO Start to test legion.test_legion.test_receive_bless_box (2/5)
-2017-11-13 12:00:19,637 INFO Start to test legion.test_legion.test_receive_bless_box (3/5)
-2017-11-13 12:00:19,737 INFO Start to test legion.test_legion.test_receive_bless_box (4/5)
-2017-11-13 12:00:19,837 INFO Start to test legion.test_legion.test_quit_legion (5/5)
+2019-03-13 18:46:13,810 INFO 开始测试，用例数量总共15个，跳过5个，实际运行10个
+2019-03-13 18:46:13,910 INFO start to test battle.test_tattle.test_start_battle (1/10)
+2019-03-13 18:46:14,010 INFO start to test battle.test_tattle.test_skill_buff (2/10)
+2019-03-13 18:46:14,111 INFO start to test battle.test_tattle.test_normal_attack (3/10)
+2019-03-13 18:46:14,211 INFO start to test battle.test_tattle.test_get_battle_reward (4/10)
+2019-03-13 18:46:14,211 DEBUG 测试领取战斗奖励，获得的钻石数量是：100
+2019-03-13 18:46:14,311 INFO start to test battle.test_tattle.test_get_battle_reward (5/10)
 ```
 
 - setting类提供多个设置选项进行配置
@@ -168,27 +167,29 @@ class setting:
     # 执行用例的时候，显示报错信息
     show_error_traceback = True
 
-    # 生成ztest风格的报告
-    create_ztest_style_report = True
+    # 测试报告样式1
+    create_report_by_style_1 = True
 
-    # 生成bstest风格的报告
-    create_bstest_style_report = True
+    # 测试报告样式2
+    create_report_by_style_2 = True
 ```
 
 
-- 集成 [ztest](https://github.com/zhangfei19841004/ztest) 和 [BSTestRunner](https://github.com/easonhan007/HTMLTestRunner) 自动生成两份测试报告，感谢两位作者的测试报告模版
+- 集成两种测试报告样式，感谢两位作者的测试报告模版  
 
-> ztest风格
+> [测试报告1](https://github.com/findyou/HTMLTestRunnerCN)
 
-![ztest风格](https://github.com/jianbing/utx/raw/master/img/ztest.png)
+![](https://github.com/jianbing/utx/raw/master/img/style1.png)
 
-> bstest风格
+> [测试报告2](https://github.com/zhangfei19841004/ztest)
 
-![bstest风格](https://github.com/jianbing/utx/raw/master/img/bstest.png)
+![](https://github.com/jianbing/utx/raw/master/img/style2.png)
 
 - 无缝接入unittest项目，导入utx包即可开始使用扩展功能，无需修改之前的代码
 
 ---
+
+## 例子
 
 demo目录下，有几个例子：
 
