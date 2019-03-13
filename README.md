@@ -132,7 +132,7 @@ def test_get_battle_reward(self, reward):
 
 
 - 执行测试时，显示测试进度
-```python
+```
 2019-03-13 18:46:13,810 INFO 开始测试，用例数量总共15个，跳过5个，实际运行10个
 2019-03-13 18:46:13,910 INFO start to test battle.test_tattle.test_start_battle (1/10)
 2019-03-13 18:46:14,010 INFO start to test battle.test_tattle.test_skill_buff (2/10)
@@ -176,18 +176,17 @@ class setting:
 
 
 - 集成两种测试报告样式，感谢两位作者的测试报告模版  
-
-> [测试报告1](https://github.com/findyou/HTMLTestRunnerCN)
+    
+[测试报告1](https://github.com/findyou/HTMLTestRunnerCN)
 
 ![](https://github.com/jianbing/utx/raw/master/img/style1.png)
 
-> [测试报告2](https://github.com/zhangfei19841004/ztest)
+[测试报告2](https://github.com/zhangfei19841004/ztest)
 
 ![](https://github.com/jianbing/utx/raw/master/img/style2.png)
 
 - 无缝接入unittest项目，导入utx包即可开始使用扩展功能，无需修改之前的代码
 
----
 
 ## 例子
 
