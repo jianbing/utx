@@ -5,14 +5,14 @@ import io
 import os
 import sys
 from shutil import rmtree
-from setuptools import setup, Command
+from setuptools import setup, Command, find_packages
 
 NAME = 'utx'
 DESCRIPTION = '对Python unittest的功能进行了扩展'
 URL = 'https://github.com/jianbing/utx'
 EMAIL = '326333381@qq.com'
 AUTHOR = 'jianbing'
-VERSION = '0.0.5'
+VERSION = '0.0.6'
 REQUIRED = [
     'colorama'
 ]
@@ -65,7 +65,7 @@ setup(
     author_email=EMAIL,
     url=URL,
     python_requires='>=3.6.0',
-    packages=['utx'],
+    packages=find_packages(),
     install_requires=REQUIRED,
     include_package_data=True,
     license='MIT',
