@@ -30,6 +30,10 @@ def warn(msg):
     _logger.warning(Fore.YELLOW + "WARNING " + str(msg) + Style.RESET_ALL)
 
 
+def _print(msg):
+    _logger.debug(Fore.BLUE + "PRINT " + str(msg) + Style.RESET_ALL)
+
+
 def set_level(level):
     """ 设置log级别
 

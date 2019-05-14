@@ -33,3 +33,6 @@ class setting:
 
     # 测试报告样式2
     create_report_by_style_2 = True
+
+    # 在控制台显示print打印的内容
+    show_print_in_console = False

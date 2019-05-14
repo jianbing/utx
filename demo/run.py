@@ -16,6 +16,7 @@ if __name__ == '__main__':
     setting.sort_case = True  # 是否按照编写顺序，对用例进行排序
     setting.create_report_by_style_1 = True  # 测试报告样式1
     setting.create_report_by_style_2 = True  # 测试报告样式2
+    setting.show_print_in_console = True
 
     log.set_level(logging.DEBUG)  # 设置utx的log级别
     # log.set_level_to_debug()     # 设置log级别的另外一种方法

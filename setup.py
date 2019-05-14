@@ -12,7 +12,7 @@ DESCRIPTION = '对Python unittest的功能进行了扩展'
 URL = 'https://github.com/jianbing/utx'
 EMAIL = '326333381@qq.com'
 AUTHOR = 'jianbing'
-VERSION = '0.0.6'
+VERSION = '0.0.7'
 REQUIRED = [
     'colorama'
 ]

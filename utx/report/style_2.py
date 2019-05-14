@@ -7072,7 +7072,7 @@ html = r"""
                                 name="filterResult" id="filterResult">
                             <option id="filterResultOption" value="">----------</option>
                         </select>
-                        <div style="width: 20%; float: right">
+                        <div style="width: 25%; float: right">
                             <label class="form-control">
                                 <span class="text-navy">用例数: </span><span class="text-navy b-r"
                                                                           id="filterAll">3</span><span> | </span>

@@ -7,7 +7,7 @@ utx扩展了Python unittest框架的功能，起因是需要控制测试用例�
 ## 当前版本
 
 ```python
-V0.0.6
+V0.0.7
 ```
 
 ## 安装
@@ -172,6 +172,9 @@ class setting:
 
     # 测试报告样式2
     create_report_by_style_2 = True
+    
+    # 在控制台显示print打印的内容
+    show_print_in_console = False
 ```
 
 

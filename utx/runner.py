@@ -52,6 +52,8 @@ class _TestResult(unittest.TestResult):
         result = self.outputBuffer.getvalue()
         self.outputBuffer.seek(0)
         self.outputBuffer.truncate()
+        if result and setting.show_print_in_console:
+            log._print(result.strip())
         return result
 
     def stopTest(self, test):
