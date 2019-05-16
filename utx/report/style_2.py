@@ -7266,7 +7266,9 @@ html = r"""
         if (error_case_flag) {
             var className = $("#filterClass").val();
             var caseResult = "错误";
-            $("#error_case").show();
+            $("#error_case").show();          
+            $("#filterResult_chosen > a > span").text("错误");
+            $("#filterResult").val("错误") 
             generateResult(className, caseResult);
         }
         $("#filterClass").on('change', function () {
