@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 # -*- coding: UTF-8 -*-
+import re
 import functools
 import time
 import unittest
@@ -16,7 +17,7 @@ CASE_RUN_INDEX_FlAG = "__case_run_index_flag__"
 CASE_SKIP_FLAG = "__unittest_skip__"
 CASE_SKIP_REASON_FLAG = "__unittest_skip_why__"
 
-__all__ = ["skip", "skip_if", "data", "tag", "stop_patch"]
+__all__ = ["skip", "skip_if", "data", "tag", "stop_patch", "run_case"]
 
 
 def skip(reason):
@@ -256,3 +257,13 @@ unittest.TestCase = _TestCase
 
 def stop_patch():
     unittest.TestCase = TestCaseBackup
+
+
+def run_case(case_class, case_name: str):
+    setting.execute_interval = 0.3
+    r = re.compile(case_name.replace("test_", "test(_\d+)?_"))
+    suite = unittest.TestSuite()
+    for i in unittest.TestLoader().loadTestsFromTestCase(case_class):
+        if r.match(getattr(i, "_testMethodName")):
+            suite.addTest(i)
+    unittest.TextTestRunner(verbosity=0).run(suite)

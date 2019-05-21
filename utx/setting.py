@@ -8,7 +8,7 @@ from utx.tag import Tag
 
 class setting:
     # 只运行的用例类型
-    run_case = {Tag.SMOKE}
+    run_case = {Tag.ALL}
 
     # 开启用例排序
     sort_case = True

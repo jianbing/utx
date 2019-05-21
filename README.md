@@ -7,7 +7,7 @@ utx扩展了Python unittest框架的功能，起因是需要控制测试用例�
 ## 当前版本
 
 ```python
-V0.0.7
+V0.0.8
 ```
 
 ## 安装
@@ -197,6 +197,6 @@ demo目录下，有几个例子：
 
 - ```run.py```  一个完整使用utx功能的demo小项目
 
-- ```just_use_report.py``` 单独使用测试报告组件，不需要utx的其他扩展功能
+- ```use_report.py``` 单独使用测试报告组件，不需要utx的其他扩展功能
 
-- ```stop_patch_example.py``` 如果项目使用utx，在调试单个用例的时候，需要先调用utx.stop_patch()，暂停utx对unittest模块的注入
+- ```debug_case.py``` 使用utx后，单独调试某个用例的例子
