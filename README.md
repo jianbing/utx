@@ -16,7 +16,7 @@ V0.0.8
 python setup.py install
 ```
 
-## 安装
+## 更新
 
 ```python
 pip uninstall utx   # 需要先卸载旧的utx
